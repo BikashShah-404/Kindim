@@ -21,6 +21,7 @@
     "start": "node src/index.js",
     "dev": "nodemon -r dotenv/config src/index.js"
   },
+  "debug": "true",
   "keywords": [],
   "author": "",
   "license": "ISC",
