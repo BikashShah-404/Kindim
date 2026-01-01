@@ -29,6 +29,8 @@ export const uploadOnCloudinary = async (localFilePath) => {
 export const deleteAsset = async (assetPublicId) => {
   try {
     const response = await cloudinary.uploader.destroy(assetPublicId);
+    console.log(response);
+    
     return response;
   } catch (error) {
     console.log(error);

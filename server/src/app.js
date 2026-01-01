@@ -21,8 +21,8 @@ import indexRouter from "./routes/index.js";
 app.use("/", indexRouter);
 
 app.use((err, req, res, next) => {
+  console.log(err.stack);
   err.message = err ? err.toString() : "Something went wrong";
-  console.log(err);
   res
     .status(500)
     .json({ status: "error", statusCode: 500, message: err.message });

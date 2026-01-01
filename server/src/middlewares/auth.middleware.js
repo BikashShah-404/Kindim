@@ -12,11 +12,16 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
   const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
   const user = await User.findById(decodedToken._id).select(
-    "-password -refreshToken "
+    "-password -refreshToken -forgetPasswordToken -forgetPasswordTokenExpires"
   );
 
   if (!user) throw new Error("Invalid Access Token");
 
   req.user = user;
+  next();
+});
+
+export const authorizedAdmin = asyncHandler(async (req, res, next) => {
+  if (!req.user || !req.user.isAdmin) throw new Error("Forbidden : Admin Only");
   next();
 });
