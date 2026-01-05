@@ -6,10 +6,12 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import ToolTip from "./Tooltip";
 const Header = () => {
+  const location = useLocation();
+
   return (
     <header className="w-full  h-16 rounded-b-md shadow-2xl pl-8 pr-2 flex items-center ">
       <Link to="/" className="h-full w-fit">
@@ -39,7 +41,7 @@ const Header = () => {
         <Link to={"/profile"}>
           <ToolTip Icon={<FaUser size={20} />} Text="Profile" />
         </Link>
-        <Link to={"/login"}>
+        <Link to={"/login"} state={{ redirect: location.pathname }}>
           <ToolTip Icon={<IoMdLogIn size={20} />} Text="Login" />
         </Link>
       </div>

@@ -11,7 +11,15 @@ export const userSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+
+    signup: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/sign-up`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation } = userSlice;
+export const { useLoginMutation, useSignupMutation } = userSlice;

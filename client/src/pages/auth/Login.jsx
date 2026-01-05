@@ -29,10 +29,9 @@ const Login = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const { search } = useLocation();
-  const sp = new URLSearchParams(search);
-  const redirect = sp.get("redirect") || "/";
-  console.log(redirect.startsWith("/"));
+  const location = useLocation();
+  const { redirect } = location.state || "/";
+  console.log(redirect);
 
   useEffect(() => {
     // This is because since we r uisng redirect hadn't it been checked whether it startsWith "/" then we can basically inject any url in the /login?redirect="https://myPhisingWebsite.com" and would have risked security so we check this so that we cannot go to any external url.
@@ -53,7 +52,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.data || "An unknown error occurred");
+      toast.error(error.data.message || "An unknown error occurred");
     }
   };
 
@@ -128,7 +127,7 @@ const Login = () => {
             </button>
             <p className="mt-8">
               Don't Have An Account?
-              <Link to="/sign-up">
+              <Link to="/sign-up" state={{ redirect }}>
                 <span className="underline ml-0.5"> SignUp</span>
               </Link>
             </p>
