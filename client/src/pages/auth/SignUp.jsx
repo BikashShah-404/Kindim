@@ -21,7 +21,7 @@ import { FaEye, FaFileUpload } from "react-icons/fa";
 import { IoIosEyeOff } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 
-import { motion, scale } from "motion/react";
+import { easeIn, motion, scale } from "motion/react";
 
 // motion-part:
 const steps = [{ title: "Step-1" }, { title: "Step-2" }];
@@ -138,18 +138,31 @@ const SignUp = () => {
 
   return (
     <div className="absolute w-screen h-screen inset-0 backdrop-blur-xs flex items-center justify-center">
-      <div className="flex items-center md:justify-around w-3/4 md:w-4/5 lg:2/3 h-4/5 max-h-11/12 max-w-6xl p-2 rounded-2xl shadow-2xl bg-accent">
-        <div className="w-1/5 flex flex-col items-center justify-around relative h-[20rem] ">
+      <div className="flex flex-col md:flex-row items-center justify-around  md:justify-around w-[90%] md:w-[95%] h-[90%] md:h-[80%]  max-w-6xl p-2 rounded-2xl shadow-2xl bg-accent overflow-y-scroll overflow-x-hidden sm:overflow-y-auto">
+        <div className="md:w-1/5 mt-6 md:mt-0 flex md:flex-col items-center justify-around relative  w-[20rem]  md:h-[20rem] ">
           {
-            <motion.div
-              className=" absolute w-1 bg-blue-500 ml-[3.7rem] "
-              initial={{ height: 0 }}
-              animate={{ height: `${(currentStep / steps.length) * 100}%` }}
-              transition={{ duration: 0.3, ease: "easeIn" }}
-            />
+            <>
+              <motion.div
+                className="absolute h-1 bg-blue-500 mt-[2rem]  md:hidden"
+                initial={{ width: 0 }}
+                animate={{ width: `${(currentStep / steps.length) * 100}%` }}
+                transition={{ duration: 0.3, ease: "easeIn" }}
+              />
+              <motion.div
+                className=" absolute hidden md:block w-1 rotate-90  bg-blue-500 ml-[3.7rem]  "
+                initial={{ height: 0 }}
+                animate={{
+                  height: `${(currentStep / steps.length) * 100}%`,
+                }}
+                transition={{ duration: 0.3, ease: "easeIn" }}
+              />
+            </>
           }
           {steps.map((step, index) => (
-            <div key={index} className="flex items-center relative space-x-2">
+            <div
+              key={index}
+              className="flex flex-col md:flex-row items-center relative space-y-1 md:space-x-2"
+            >
               <p
                 className={`text-lg font-semibold ${
                   index <= currentStep ? "text-blue-500" : "text-gray-500"
@@ -169,14 +182,14 @@ const SignUp = () => {
             </div>
           ))}
         </div>
-        <div className=" flex flex-col items-center justify-center w-3/5   h-full p-4 ">
-          <h1 className="text-2xl font-semibold ">SignUp 🥳</h1>
+        <div className=" flex flex-col items-center justify-center w-full  p-4   ">
+          <h1 className="text-2xl font-semibold mt-4 md:mt-0">SignUp 🥳</h1>
           <form
-            className=" w-full flex flex-col items-center space-y-2"
+            className=" w-full flex flex-col  items-center space-y-2"
             onSubmit={handleSubmit(handleSignUp)}
           >
             <motion.div
-              className="w-full flex flex-col items-center "
+              className="w-full flex flex-col items-center  "
               key={currentStep}
               initial={{ opacity: 0, x: 80 }}
               animate={{ opacity: 1, x: 0 }}
@@ -184,7 +197,7 @@ const SignUp = () => {
               transition={{ duration: 0.3, ease: "easeIn" }}
             >
               {currentStep === 0 && (
-                <>
+                <div className=" w-full md:w-4/5 lg:3/5 ">
                   <div className="w-full flex flex-col  mt-7 -space-y-3">
                     <Input
                       className=""
@@ -273,12 +286,12 @@ const SignUp = () => {
                       </p>
                     )}
                   </div>
-                </>
+                </div>
               )}
               {currentStep === steps.length - 1 && (
                 <>
                   <p className="mt-12 text-lg "> ProfilePic : </p>
-                  <div className="w-60 h-fit relative rounded-2xl  overflow-hidden flex  items-center justify-center  mt-6 ">
+                  <div className="w-60 h-fit relative rounded-2xl  overflow-hidden flex  items-center justify-center  my-6 ">
                     {preview && (
                       <img
                         src={preview}
@@ -287,7 +300,7 @@ const SignUp = () => {
                       />
                     )}
 
-                    {!preview && <FaUser size={200} />}
+                    {!preview && <FaUser size={150} />}
 
                     <div
                       role="button"
@@ -336,9 +349,9 @@ const SignUp = () => {
                 </>
               )}
             </motion.div>
-            <div className="w-full flex items-center justify-around">
+            <div className="w-full mt-3  flex flex-col md:flex-row items-center space-y-4 md:space-y-0   md:justify-center md:space-x-30  ">
               <button
-                className={`bg-black px-14 py-2 text-white rounded-md mt-8 ${
+                className={`bg-black px-14 py-2 text-white rounded-md  ${
                   currentStep === 0 ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={currentStep === 0}
@@ -350,7 +363,7 @@ const SignUp = () => {
               {currentStep === 0 && (
                 <button
                   type="button"
-                  className="bg-black px-14 py-2 text-white rounded-md mt-8 "
+                  className="bg-black px-14 py-2 text-white rounded-md  "
                   onClick={nextStep}
                 >
                   Next
@@ -359,17 +372,17 @@ const SignUp = () => {
               {currentStep === steps.length - 1 && (
                 <button
                   type="submit"
-                  className="bg-black px-14 py-2 text-white rounded-md mt-8 "
+                  className="bg-black px-14 py-2 text-white rounded-md  "
                 >
                   {isSubmitting
                     ? "Registering..."
                     : preview
-                    ? "Upload and Signup"
-                    : "Skip and Signup"}
+                    ? "Upload & Signup"
+                    : "Skip & Signup"}
                 </button>
               )}
             </div>
-            <p className="mt-8">
+            <p className="mt-6">
               Already Have An Account?
               <Link to="/login" state={redirect}>
                 <span className="underline ml-0.5"> Login</span>
