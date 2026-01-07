@@ -5,7 +5,19 @@ import { forwardRef } from "react";
 // Now, react-hook-form can control and validate the input field.
 
 const Input = forwardRef(
-  ({ onChange, name, label, placeholder, type, className }, ref) => {
+  (
+    {
+      onChange,
+      name,
+      label,
+      placeholder,
+      type,
+      className,
+      value,
+      isEditable = true,
+    },
+    ref
+  ) => {
     return (
       <div
         className={`w-full flex flex-col gap-y-2 p-6 pt-2 pb-4 rounded-md ${className}`}
@@ -16,8 +28,12 @@ const Input = forwardRef(
           ref={ref}
           type={type}
           onChange={onChange}
-          className={`w-full py-3 bg-gray-700  text-white  px-4 rounded-md placeholder:text-white `}
+          className={`w-full py-3   text-white  px-4 rounded-md placeholder:text-white ${
+            isEditable ? "bg-gray-800" : "bg-gray-500"
+          } `}
           placeholder={placeholder}
+          value={value}
+          disabled={!isEditable}
         />
       </div>
     );

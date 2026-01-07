@@ -5,12 +5,35 @@ import { RiSearchLine } from "react-icons/ri";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
+import { IoMdLogOut } from "react-icons/io";
 
 import { Link, useLocation } from "react-router-dom";
 
 import ToolTip from "./Tooltip";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useLogoutMutation } from "@/redux/api/userSlice";
+import { logout } from "@/redux/features/auth/authSlice";
+
 const Header = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const [logoutApiCall] = useLogoutMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+  console.log(userInfo);
+
+  const logoutHandler = async () => {
+    try {
+      const response = await logoutApiCall().unwrap();
+      if (response.status === 200) {
+        toast("See u soon...");
+        dispatch(logout());
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.data.message || "Something went wrong...");
+    }
+  };
 
   return (
     <header className="w-full  h-16 rounded-b-md shadow-2xl pl-8 pr-2 flex items-center ">
@@ -23,7 +46,6 @@ const Header = () => {
           />
         </div>
       </Link>
-
       <div className=" flex flex-1  justify-center items-center">
         <div className="hidden md:flex px-10 ">
           <input
@@ -39,11 +61,30 @@ const Header = () => {
       <div className="flex items-center justify-center px-4 space-x-3">
         <ToolTip Icon={<FaShoppingCart size={20} />} Text="Cart" />
         <Link to={"/profile"}>
-          <ToolTip Icon={<FaUser size={20} />} Text="Profile" />
+          {userInfo ? (
+            <div className="w-10 h-10 rounded-full overflow-hidden">
+              <img
+                src={userInfo.profilePic}
+                alt="profile.png"
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <ToolTip Icon={<FaUser size={20} />} Text="Profile" />
+          )}
         </Link>
-        <Link to={"/login"} state={{ redirect: location.pathname }}>
-          <ToolTip Icon={<IoMdLogIn size={20} />} Text="Login" />
-        </Link>
+
+        {!userInfo ? (
+          <Link to={"/login"} state={{ redirect: location.pathname }}>
+            <ToolTip Icon={<IoMdLogIn size={20} />} Text="Login" />
+          </Link>
+        ) : (
+          <ToolTip
+            Icon={<IoMdLogOut size={20} />}
+            Text="Logout"
+            onClick={() => logoutHandler()}
+          />
+        )}
       </div>
     </header>
   );

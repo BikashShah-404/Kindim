@@ -238,11 +238,9 @@ const updateProfilePic = asyncHandler(async (req, res) => {
 
 const updatePassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
-
   const user = await User.findById(req.user?._id);
-
   const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
-  if (!isPasswordCorrect) throw new Error("Incorrect Password");
+  if (!isPasswordCorrect) throw new Error("Incorrect Current Password");
 
   user.password = newPassword;
   await user.save({ validateBeforeSave: false });

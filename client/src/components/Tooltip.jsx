@@ -1,13 +1,14 @@
 import * as React from "react";
 import { Tooltip } from "radix-ui";
 
-const ToolTip = ({ Icon, Text, onClick }) => {
+const ToolTip = ({ Icon, Text, onClick, type }) => {
   return (
     <Tooltip.Provider>
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <button
             className="inline-flex size-[35px] items-center justify-center rounded-md bg-white text-violet11 shadow-[0_1px_2px] shadow-blackA4 outline-none hover:bg-violet3 focus:shadow-[0_0_0_2px] focus:shadow-black"
+            type={type}
             onClick={onClick}
           >
             {Icon}

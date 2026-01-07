@@ -30,12 +30,13 @@ const Login = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   const location = useLocation();
-  const { redirect } = location.state || "/";
-  console.log(redirect);
+  console.log(location);
+
+  const redirect = location.state?.redirect || "/";
 
   useEffect(() => {
     // This is because since we r uisng redirect hadn't it been checked whether it startsWith "/" then we can basically inject any url in the /login?redirect="https://myPhisingWebsite.com" and would have risked security so we check this so that we cannot go to any external url.
-    if (!redirect.startsWith("/")) {
+    if (!redirect?.startsWith("/")) {
       navigate("/"); // Prevents external redirects
     }
     if (userInfo) navigate(redirect);
@@ -121,7 +122,10 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="bg-black px-14 py-2 text-white rounded-md mt-8 "
+              className={`bg-black px-14 py-2 text-white rounded-md mt-8 
+                ${isSubmitting ? "cursor-wait" : "cursor-pointer"}
+                    }`}
+              disabled={isSubmitting}
             >
               {isSubmitting ? "Logging In..." : "Login"}
             </button>

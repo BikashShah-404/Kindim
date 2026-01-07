@@ -39,7 +39,7 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const { redirect } = location.state || "/";
+  const redirect = location.state?.redirect || "/";
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -107,12 +107,12 @@ const SignUp = () => {
       }
     } catch (err) {
       console.log(err);
-      toast.error(err.data.message) || "Something went wrong...";
+      toast.error(err.data.message || "Something went wrong...");
     }
   };
 
   useEffect(() => {
-    if (!redirect.startsWith("/")) navigate("/");
+    if (!redirect?.startsWith("/")) navigate("/");
     if (userInfo) navigate(redirect);
   }, [redirect, userInfo, navigate]);
 
@@ -149,7 +149,7 @@ const SignUp = () => {
                 transition={{ duration: 0.3, ease: "easeIn" }}
               />
               <motion.div
-                className=" absolute hidden md:block w-1 rotate-90  bg-blue-500 ml-[3.7rem]  "
+                className=" absolute hidden md:block w-1   bg-blue-500 ml-[3.7rem]  "
                 initial={{ height: 0 }}
                 animate={{
                   height: `${(currentStep / steps.length) * 100}%`,
