@@ -327,6 +327,14 @@ const resetPassword = asyncHandler(async (req, res) => {
   });
 });
 
+const checkIfAdmin = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    status: 200,
+    data: {},
+    msg: "Admin Access Granted...",
+  });
+});
+
 // Admin-Only:
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
@@ -427,6 +435,7 @@ export const userController = {
   getForgetPasswordToken,
   verifyForgetPasswordToken,
   resetPassword,
+  checkIfAdmin,
   getAllUsers,
   getAUserById,
   updateProfileById,

@@ -71,6 +71,13 @@ export const userSlice = apiSlice.injectEndpoints({
         body: { email: data.email, newPassword: data.newPassword },
       }),
     }),
+
+    checkIfAdmin: builder.query({
+      query: () => ({
+        url: `${USERS_URL}/check-isadmin`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -84,4 +91,5 @@ export const {
   useGetFPTokenMutation,
   useSendFPTokenMutation,
   useResetPasswordMutation,
+  useCheckIfAdminQuery,
 } = userSlice;

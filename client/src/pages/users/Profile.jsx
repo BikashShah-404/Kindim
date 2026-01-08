@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye, FaFileUpload, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   Card,
@@ -19,6 +19,7 @@ import {
 import { CiEdit } from "react-icons/ci";
 import { MdCancel, MdDeleteForever } from "react-icons/md";
 import { IoIosEyeOff } from "react-icons/io";
+import { BsBagCheckFill } from "react-icons/bs";
 import {
   Tooltip,
   TooltipContent,
@@ -33,6 +34,8 @@ import {
 } from "@/redux/api/userSlice";
 import { setCredentials } from "@/redux/features/auth/authSlice";
 import store from "@/redux/store";
+
+import { motion, scale } from "motion/react";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -223,9 +226,10 @@ const Profile = () => {
     }
   };
 
+  // To-do : Add a floating My-Orders button
   return (
     <div className="w-full h-[calc(100vh-64px)] flex flex-col p-10 items-center overflow-y-auto ">
-      <div className="w-60 h-60 rounded-3xl overflow-hidden mt-10 relative">
+      <div className="w-60 min-h-60 rounded-3xl overflow-hidden mt-10 relative">
         <img
           src={
             preview ? (
@@ -439,6 +443,28 @@ const Profile = () => {
           </div>
         )}
       </div>
+      <Link to="/orders">
+        <motion.div
+          className=" fixed right-1 bottom-1 sm:right-5 sm:bottom-5 md:right-10 md:bottom-10 z-10 shadow-2xl cursor-pointer "
+          whileHover={{ scale: 1.2 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+        >
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <BsBagCheckFill
+                  size={55}
+                  color="black"
+                  className={`cursor-pointer bg-white rounded-xl p-2 shadow-md shadow-accent-foreground`}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>My Orders</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </motion.div>
+      </Link>
     </div>
   );
 };

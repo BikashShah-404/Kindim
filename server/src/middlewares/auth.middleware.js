@@ -22,6 +22,11 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 });
 
 export const authorizedAdmin = asyncHandler(async (req, res, next) => {
-  if (!req.user || !req.user.isAdmin) throw new Error("Forbidden : Admin Only");
+  if (!req.user || !req.user.isAdmin) {
+    res
+      .status(403)
+      .json({ status: 403, data: {}, msg: "Forbidden : Admin Only" });
+    throw new Error("Forbidden : Admin Only");
+  }
   next();
 });

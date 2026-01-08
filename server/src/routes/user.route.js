@@ -32,6 +32,10 @@ router
   .post(userController.verifyForgetPasswordToken);
 router.route("/reset-password/:token").post(userController.resetPassword);
 
+router
+  .route("/check-isadmin")
+  .get(verifyJWT, authorizedAdmin, userController.checkIfAdmin);
+
 // Admin-Only:
 router
   .route("/get-all-users")
