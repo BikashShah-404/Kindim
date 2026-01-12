@@ -16,6 +16,7 @@ import ForgotPassword from "@/pages/auth/ForgotPassword.jsx";
 import Orders from "@/pages/users/Orders.jsx";
 import UserList from "@/pages/admin/UserList.jsx";
 import Dashboard from "@/pages/admin/Dashboard.jsx";
+import CategoryList from "@/pages/admin/CategoryList.jsx";
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -30,6 +31,7 @@ const routes = createRoutesFromElements(
     <Route path="/admin" element={<AdminRoute />}>
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="userlist" element={<UserList />} />
+      <Route path="category-list" element={<CategoryList />} />
     </Route>
   </Route>
 );
