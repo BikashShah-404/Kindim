@@ -1,6 +1,9 @@
 import { motion } from "motion/react";
+import { useSelector } from "react-redux";
 
 const Orders = () => {
+  // const {} = useSelector(sta);
+
   return (
     <motion.div
       className="w-screen h-screen bg-red-900"

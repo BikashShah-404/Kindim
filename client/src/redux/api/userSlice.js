@@ -78,6 +78,39 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getUsers: builder.query({
+      query: () => ({
+        url: `${USERS_URL}/get-all-users`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
+      keepUnusedDataFor: 5,
+    }),
+
+    deleteUser: builder.mutation({
+      query: (userId) => ({
+        url: `${USERS_URL}/user/${userId}`,
+        method: "DELETE",
+      }),
+    }),
+
+    getUserDetails: builder.query({
+      query: (userId) => ({
+        url: `${USERS_URL}/user/${userId}`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 5,
+    }),
+
+    updateUserDetails: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/user/${data.userId}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -92,4 +125,8 @@ export const {
   useSendFPTokenMutation,
   useResetPasswordMutation,
   useCheckIfAdminQuery,
+  useGetUsersQuery,
+  useDeleteUserMutation,
+  useGetUserDetailsQuery,
+  useUpdateUserDetailsMutation,
 } = userSlice;

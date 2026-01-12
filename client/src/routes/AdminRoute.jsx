@@ -1,6 +1,5 @@
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import { useCheckIfAdminQuery } from "@/redux/api/userSlice";
 import { toast } from "react-toastify";
 
@@ -13,11 +12,9 @@ const AdminRoute = () => {
   return isLoading ? (
     <p>Loading...</p>
   ) : userInfo && data?.status === 200 ? (
-    <div>
-      <p>Manish is GAy...</p>
-    </div>
+    <Outlet />
   ) : (
-    <Navigate to={"/login"} />
+    <Navigate to={"/login"} replace />
   );
 };
 

@@ -29,11 +29,14 @@ import {
 import { toast } from "react-toastify";
 import {
   useChangePasswordMutation,
+  useCheckIfAdminQuery,
   useUpdateProfileMutation,
   useUpdateProfilePicMutation,
 } from "@/redux/api/userSlice";
 import { setCredentials } from "@/redux/features/auth/authSlice";
 import store from "@/redux/store";
+
+import { MdDashboard } from "react-icons/md";
 
 import { motion, scale } from "motion/react";
 
@@ -80,6 +83,8 @@ const Profile = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [preview, setPreview] = useState(null);
+  const { data, isLoading, error } = useCheckIfAdminQuery();
+  console.log(data);
 
   const profilePicRef = useRef(null);
 
@@ -226,7 +231,6 @@ const Profile = () => {
     }
   };
 
-  // To-do : Add a floating My-Orders button
   return (
     <div className="w-full h-[calc(100vh-64px)] flex flex-col p-10 items-center overflow-y-auto ">
       <div className="w-60 min-h-60 rounded-3xl overflow-hidden mt-10 relative">
@@ -445,7 +449,7 @@ const Profile = () => {
       </div>
       <Link to="/orders">
         <motion.div
-          className=" fixed right-1 bottom-1 sm:right-5 sm:bottom-5 md:right-10 md:bottom-10 z-10 shadow-2xl cursor-pointer "
+          className=" fixed right-1 bottom-1 sm:right-5 sm:bottom-5 md:right-10 md:bottom-10 z-10 shadow-2xl cursor-pointer w-fit h-fit "
           whileHover={{ scale: 1.2 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
         >
@@ -453,7 +457,7 @@ const Profile = () => {
             <Tooltip>
               <TooltipTrigger>
                 <BsBagCheckFill
-                  size={55}
+                  size={50}
                   color="black"
                   className={`cursor-pointer bg-white rounded-xl p-2 shadow-md shadow-accent-foreground`}
                 />
@@ -465,6 +469,30 @@ const Profile = () => {
           </TooltipProvider>
         </motion.div>
       </Link>
+      {data?.status === 200 && (
+        <Link to="/admin/dashboard">
+          <motion.div
+            className=" fixed right-1 top-20 sm:right-5 sm:top-20 md:right-10 md:top-20 z-10 shadow-2xl cursor-pointer w-fit h-fit"
+            whileHover={{ scale: 1.2 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <MdDashboard
+                    size={50}
+                    color="black"
+                    className={`cursor-pointer bg-white rounded-xl p-2 shadow-md shadow-accent-foreground`}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Dashboard</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </motion.div>
+        </Link>
+      )}
     </div>
   );
 };
