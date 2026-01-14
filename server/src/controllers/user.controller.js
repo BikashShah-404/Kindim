@@ -413,6 +413,16 @@ const deleteAUserById = asyncHandler(async (req, res) => {
   if (!user) throw new Error("User with specified id not found");
   if (user.isAdmin) throw new Error("Admin cannot be deleted");
 
+  if (user.profilePic) {
+    const assetId = user.profilePic.split("/").pop()?.split(".")[0];
+    if (!assetId) throw new Error("Invalid ProfilePic URL format");
+
+    const { result } = await deleteAsset(assetId);
+    console.log(result);
+
+    if (result !== "ok") throw new Error("ProfilePic not deleted");
+  }
+
   const response = await User.deleteOne({ _id: user._id });
 
   if (!response.acknowledged)
