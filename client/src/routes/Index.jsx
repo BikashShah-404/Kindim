@@ -17,6 +17,9 @@ import Orders from "@/pages/users/Orders.jsx";
 import UserList from "@/pages/admin/UserList.jsx";
 import Dashboard from "@/pages/admin/Dashboard.jsx";
 import CategoryList from "@/pages/admin/CategoryList.jsx";
+import ProductCreate from "@/pages/admin/ProductCreate.jsx";
+import ProductUpdate from "@/pages/admin/ProductUpdate.jsx";
+import AllProducts from "@/pages/admin/AllProducts.jsx";
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -32,6 +35,9 @@ const routes = createRoutesFromElements(
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="userlist" element={<UserList />} />
       <Route path="category-list" element={<CategoryList />} />
+      <Route path="product-create" element={<ProductCreate />} />
+      <Route path="product-all" element={<AllProducts />} />
+      <Route path="product/update/:_id" element={<ProductUpdate />} />
     </Route>
   </Route>
 );

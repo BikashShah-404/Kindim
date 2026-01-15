@@ -39,6 +39,7 @@ import store from "@/redux/store";
 import { MdDashboard } from "react-icons/md";
 
 import { motion, scale } from "motion/react";
+import AdminMenu from "../admin/AdminMenu";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -457,7 +458,7 @@ const Profile = () => {
             <Tooltip>
               <TooltipTrigger>
                 <BsBagCheckFill
-                  size={50}
+                  size={45}
                   color="black"
                   className={`cursor-pointer bg-white rounded-xl p-2 shadow-md shadow-accent-foreground`}
                 />
@@ -469,30 +470,7 @@ const Profile = () => {
           </TooltipProvider>
         </motion.div>
       </Link>
-      {data?.status === 200 && (
-        <Link to="/admin/dashboard">
-          <motion.div
-            className=" fixed right-1 top-20 sm:right-5 sm:top-20 md:right-10 md:top-20 z-10 shadow-2xl cursor-pointer w-fit h-fit"
-            whileHover={{ scale: 1.2 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-          >
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <MdDashboard
-                    size={50}
-                    color="black"
-                    className={`cursor-pointer bg-white rounded-xl p-2 shadow-md shadow-accent-foreground`}
-                  />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Dashboard</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </motion.div>
-        </Link>
-      )}
+      {data?.status === 200 && <AdminMenu />}
     </div>
   );
 };

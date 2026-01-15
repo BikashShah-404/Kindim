@@ -52,23 +52,32 @@ const addProduct = asyncHandler(async (req, res) => {
 const updateProductDetails = asyncHandler(async (req, res) => {
   const { productId } = req.params;
 
-  const {
-    name,
-    brand,
-    quantity,
-    category,
-    description,
-    price,
-    // countInStock,
-  } = req.body;
+  const { name, brand, quantity, category, description, price, countInStock } =
+    req.body;
 
-  if (!name && !brand && !quantity && !category && !description && !price)
-    throw new Erorr("No update field found");
+  if (
+    !name &&
+    !brand &&
+    !quantity &&
+    !category &&
+    !description &&
+    !price &&
+    !countInStock
+  )
+    throw new Error("No update field found");
 
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,
     {
-      $set: { name, brand, quantity, category, description, price },
+      $set: {
+        name,
+        brand,
+        quantity,
+        category,
+        description,
+        price,
+        countInStock,
+      },
     },
     { new: true }
   );
