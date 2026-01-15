@@ -30,6 +30,7 @@ const productSlice = apiSlice.injectEndpoints({
         url: `${PRODUCT_URL}/allproducts`,
         method: "GET",
       }),
+      providesTags: ["Product"],
     }),
     getTopProduct: builder.query({
       query: () => ({

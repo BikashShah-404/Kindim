@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useGetAllCategoriesQuery } from "@/redux/api/categorySlice";
 import {
+  useDeleteProductMutation,
   useGetProductByIdQuery,
   useUpdateProductDetailsMutation,
   useUpdateProductImageMutation,
@@ -16,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { FaFileUpload } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import AdminMenu from "./AdminMenu";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ProductUpdate = () => {
@@ -123,9 +124,25 @@ const ProductUpdate = () => {
     }
   };
 
+  const navigate = useNavigate();
+  const [deleteProduct] = useDeleteProductMutation();
+  const handleProductDelete = async () => {
+    if (window.confirm("Are u sure u want to delete this product?")) {
+      try {
+        const response = await deleteProduct(params._id).unwrap();
+        if (response.data.response.acknowledged) {
+          toast.success(`Product ${product.name} deleted...`);
+          navigate("/admin/product-all");
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(error.data.message || "Something went wrong...");
+      }
+    }
+  };
   return (
     !isLoading && (
-      <div className="w-full h-[calc(100vh-64px)] flex flex-col  overflow-y-auto">
+      <div className="w-full h-[calc(100vh-64px)] flex flex-col">
         <AdminMenu />
         <form
           className=" flex flex-col space-y-4 md:space-y-8 p-6 md:p-10 "
@@ -323,19 +340,32 @@ const ProductUpdate = () => {
               </select>
             </div>
           </div>
-          <div className="w-full  md:w-4/5 flex justify-center">
-            <button
-              className={`bg-black px-14 py-2 text-white rounded-md ${
-                isSubmitting ? "cursor-wait" : "cursor-pointer"
-              }`}
-              disabled={isSubmitting}
-              type="submit"
-            >
-              {isSubmitting ? "Updating" : "Update Product"}
-            </button>
+          <div className="mt-8 md:mt-2 w-full  flex flex-col space-y-8 sm:flex-row sm:space-x-20 sm:pl-10 ">
+            <div className="w-full sm:w-fit">
+              <button
+                className={`bg-black w-full md:w-auto px-14 py-2 text-white rounded-md ${
+                  isSubmitting ? "cursor-wait" : "cursor-pointer"
+                }`}
+                disabled={isSubmitting}
+                type="submit"
+              >
+                {isSubmitting ? "Updating" : "Update Product"}
+              </button>
+            </div>
+            <div className="w-full sm:w-fit">
+              <button
+                className={`bg-black w-full md:w-auto px-14 py-2 text-white rounded-md ${
+                  isSubmitting ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
+                disabled={isSubmitting}
+                type="button"
+                onClick={handleProductDelete}
+              >
+                {isSubmitting ? "Deleting" : "Delete Product"}
+              </button>
+            </div>
           </div>
         </form>
-        {/* TODO:Add a delete Product Feature */}
       </div>
     )
   );

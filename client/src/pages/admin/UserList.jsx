@@ -14,6 +14,7 @@ import { FaSave } from "react-icons/fa";
 
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import AdminMenu from "./AdminMenu";
 
 const UserList = () => {
   const { data: users, refetch, isLoading, error } = useGetUsersQuery();
@@ -87,7 +88,7 @@ const UserList = () => {
         <>
           <h1 className="font-bold text-xl">User Information:</h1>
           <div className="min-w-full flex flex-col md:flex-row mt-10 shadow-2xl  shadow-accent-foreground py-4 rounded-xl overflow-auto">
-            {/* {<AdminMenu/>} */}
+            {<AdminMenu />}
             <form className="w-full" onSubmit={handleSubmit(handleUserUpdate)}>
               <table className="min-w-full md:w-4/5 mx-auto overflow-x-auto">
                 <thead>
