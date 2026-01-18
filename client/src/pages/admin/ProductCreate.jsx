@@ -97,7 +97,7 @@ const ProductCreate = () => {
       >
         <div className="flex flex-row items-center space-x-4 sm:pl-10">
           <p>Product Image :</p>
-          <div className="w-40 min-h-40 rounded-3xl overflow-hidden mt-10 relative">
+          <div className="w-40 h-40 min-h-40 rounded-3xl overflow-hidden mt-10 relative">
             <img
               src={preview ? preview : Upload}
               alt="profilePic.png"

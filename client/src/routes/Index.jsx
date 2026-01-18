@@ -20,6 +20,7 @@ import CategoryList from "@/pages/admin/CategoryList.jsx";
 import ProductCreate from "@/pages/admin/ProductCreate.jsx";
 import ProductUpdate from "@/pages/admin/ProductUpdate.jsx";
 import AllProducts from "@/pages/admin/AllProducts.jsx";
+import ProductDetail from "@/pages/Product/ProductDetail.jsx";
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -29,6 +30,7 @@ const routes = createRoutesFromElements(
     <Route path="/" element={<Home />} />
     <Route path="/profile" element={<Profile />} />
     <Route path="/orders" element={<Orders />} />
+    <Route path="/product/:id" element={<ProductDetail />} />
 
     {/* Admin Routes */}
     <Route path="/admin" element={<AdminRoute />}>

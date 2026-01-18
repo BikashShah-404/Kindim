@@ -200,7 +200,7 @@ const fetchProductById = asyncHandler(async (req, res) => {
 });
 
 const fetchAllProducts = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10 } = req.params;
+  const { page = 1, limit = 20 } = req.params;
 
   const products = await Product.aggregatePaginate(Product.aggregate([]), {
     page: +page,

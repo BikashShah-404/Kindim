@@ -10,7 +10,7 @@ const AllProducts = () => {
 
   return (
     <div className="flex flex-col p-10 w-screen items-center  ">
-      <div className="flex flex-col space-y-6 text-white">
+      <div className="flex flex-col md:flex-row space-y-8 md:space-x-8 md:justify-center flex-wrap text-white">
         {products &&
           products.map((product) => (
             <div
