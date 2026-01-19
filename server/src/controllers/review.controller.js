@@ -9,7 +9,13 @@ const getProductReviews = asyncHandler(async (req, res) => {
 
   if (!productId) throw new Error("Product-Id is required...");
 
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, keyword = "recent" } = req.query;
+
+  const keywordToField = {
+    recent: { updatedAt: -1 },
+    positive: { rating: -1 },
+    negative: { rating: 1 },
+  };
 
   const DBquery = [];
 
@@ -42,7 +48,7 @@ const getProductReviews = asyncHandler(async (req, res) => {
         updatedAt: 1,
       },
     },
-    { $sort: { createdAt: -1 } }
+    { $sort: keywordToField[keyword] },
   );
 
   const reviews = await Review.aggregatePaginate(Review.aggregate(DBquery), {
@@ -104,7 +110,7 @@ const getProductReviewsPerRating = asyncHandler(async (req, res) => {
         count: 1,
       },
     },
-    { $sort: { count: -1 } }
+    { $sort: { count: -1 } },
   );
 
   const reviewsPerRating = await Review.aggregate(DBquery);
@@ -178,7 +184,7 @@ const updateReview = asyncHandler(async (req, res) => {
         review,
       },
     },
-    { new: true }
+    { new: true },
   );
   if (!reviewDocument) throw new Error("Error while updating the review...");
 

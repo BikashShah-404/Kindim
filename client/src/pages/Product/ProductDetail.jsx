@@ -227,7 +227,7 @@ const ProductDetail = () => {
                     ))}
                   <Link
                     className="bg-gradient-to-l from-black via-gray-700 to-gray-600 px-14 py-2 text-white rounded-md cursor-pointer"
-                    to={"/product-review/:id"}
+                    to={`/product-review/${productId}`}
                   >
                     All {product.numReviews} reviews
                   </Link>

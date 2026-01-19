@@ -5,8 +5,8 @@ import { REVIEW_URL } from "../constants";
 const reviewSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProductReviews: builder.query({
-      query: ({ productId, page, limit }) => ({
-        url: `${REVIEW_URL}/product/${productId}?page=${page}&limit=${limit}`,
+      query: ({ productId, page, limit, keyword = "recent" }) => ({
+        url: `${REVIEW_URL}/product/${productId}?page=${page}&limit=${limit}&keyword=${keyword}`,
         method: "GET",
       }),
       keepUnusedDataFor: 5,
