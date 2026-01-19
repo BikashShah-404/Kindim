@@ -1,3 +1,4 @@
+import PaginationComp from "@/components/Pagination.jsx";
 import StarRating from "@/components/StarRating";
 import { useGetProductReviewsQuery } from "@/redux/api/reviewSlice";
 import { useEffect, useState } from "react";
@@ -7,6 +8,8 @@ const ProductAllReview = () => {
   const { id: productId } = useParams();
   console.log(productId);
 
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [keyword, setKeyword] = useState("recent");
 
   const {
@@ -15,10 +18,12 @@ const ProductAllReview = () => {
     refetch,
   } = useGetProductReviewsQuery({
     productId,
-    page: 1,
-    limit: 6,
-    // keyword,
+    page,
+    limit,
+    keyword,
   });
+
+  console.log(reviewData);
 
   useEffect(() => {
     refetch();
@@ -27,9 +32,9 @@ const ProductAllReview = () => {
   return (
     <div className="m-3 sm:p-6 rounded-lg bg-gradient-to-l from-black via-gray-700 to-gray-600 relative">
       {!isLoading && (
-        <div className="">
+        <div className=" flex flex-col space-y-18">
           <div className="w-full mt-20">
-            <div className="w-full flex items-center justify-around">
+            <div className="w-full flex flex-col sm:flex-row space-y-10 sm:space-y-0 items-center justify-around">
               <div className="text-2xl font-semibold text-white ">
                 All Reviews :
               </div>
@@ -92,6 +97,15 @@ const ProductAllReview = () => {
                   </div>
                 ))}
             </div>
+          </div>
+          <div className="w-full p-2 flex items-center justify-center">
+            <PaginationComp
+              page={page}
+              limit={limit}
+              setPage={setPage}
+              setLimit={setLimit}
+              total={reviewData?.data?.totalPages}
+            />
           </div>
         </div>
       )}
