@@ -1,4 +1,5 @@
 import TopProductCard from "@/pages/Product/TopProductCard";
+import HeartIcon from "./HeartIcon.jsx";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
@@ -10,7 +11,7 @@ const ScrollCarousel = ({ title, topProducts: data }) => {
     target: targetRef,
   });
 
-  const rawX = useTransform(scrollYProgress, [0, 1], ["1%", "-60%"]);
+  const rawX = useTransform(scrollYProgress, [0, 1], ["1%", "-95%"]);
   const x = useSpring(rawX, { stiffness: 100, damping: 30, mass: 0.5 });
 
   return (
@@ -19,28 +20,31 @@ const ScrollCarousel = ({ title, topProducts: data }) => {
         className="sticky top-0 h-[100vh] overflow-hidden bg-gradient-to-br from-black via-gray-700 to-gray-600 ;
  "
       >
-        <div className="absolute top-40 left-8 font-semibold text-xl text-white">
+        <div className="absolute top-[10vh] left-8 font-semibold text-2xl text-white">
           {title}
         </div>
 
         <div className="flex h-full items-center overflow-hidden">
           <motion.div className="flex gap-x-8 gap-y-4" style={{ x }}>
             {data.map((eachTopProduct) => (
-              <Link
-                to={`/product/${eachTopProduct._id}`}
-                className="hover:z-10"
+              <motion.div
+                whileHover={{
+                  scale: 1.1,
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="relative"
                 key={eachTopProduct._id}
               >
-                <motion.div
-                  whileHover={{
-                    scale: 1.1,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className=""
+                <Link
+                  to={`/product/${eachTopProduct._id}`}
+                  className="hover:z-10 "
                 >
                   <TopProductCard product={eachTopProduct} />
-                </motion.div>
-              </Link>
+                </Link>
+                <div className="absolute right-1 top-1">
+                  <HeartIcon product={eachTopProduct} />
+                </div>
+              </motion.div>
             ))}{" "}
           </motion.div>
         </div>

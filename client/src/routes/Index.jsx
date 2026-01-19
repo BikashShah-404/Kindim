@@ -21,6 +21,8 @@ import ProductCreate from "@/pages/admin/ProductCreate.jsx";
 import ProductUpdate from "@/pages/admin/ProductUpdate.jsx";
 import AllProducts from "@/pages/admin/AllProducts.jsx";
 import ProductDetail from "@/pages/Product/ProductDetail.jsx";
+import Favourites from "@/pages/Product/Favourites.jsx";
+import ProductAllReview from "@/pages/review/ProductAllReview.jsx";
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -28,9 +30,11 @@ const routes = createRoutesFromElements(
     <Route path="/sign-up" element={<SignUp />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/" element={<Home />} />
+    <Route path="/favourites" element={<Favourites />} />
     <Route path="/profile" element={<Profile />} />
     <Route path="/orders" element={<Orders />} />
     <Route path="/product/:id" element={<ProductDetail />} />
+    <Route path="/product-review/:id" element={<ProductAllReview />} />
 
     {/* Admin Routes */}
     <Route path="/admin" element={<AdminRoute />}>

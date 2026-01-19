@@ -33,11 +33,8 @@ const HomeImage = () => {
         <img src={Home} alt="" className="w-full h-full object-cover" />
       </div>
       <div className="sticky top-0 flex h-screen items-center justify-end px-8 ">
-        <div className="w-2/5 h-2/5  rounded-xl  relative text-white flex justify-center items-center text-[10rem] font-medium  italic">
-          <motion.div
-            style={{ opacity: discoverOpacity }}
-            className="absolute "
-          >
+        <div className="w-full h-full  relative text-black flex justify-center items-center text-[20vw] italic">
+          <motion.div style={{ opacity: discoverOpacity }} className="absolute">
             Discover
           </motion.div>
           <motion.div style={{ opacity: scrollOpacity }} className="absolute">

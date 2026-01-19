@@ -4,7 +4,13 @@ import { reviewController } from "../controllers/review.controller.js";
 
 const router = Router();
 
-router.use(verifyJWT);
+router
+  .route("/product/reviews-per-rating/:productId")
+  .get(reviewController.getProductReviewsPerRating);
+
+router
+  .route("/product-review/:productId")
+  .get(verifyJWT, reviewController.getYourReviewForAProduct);
 
 router
   .route("/product/:productId")

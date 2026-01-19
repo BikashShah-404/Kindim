@@ -5,8 +5,28 @@ import { REVIEW_URL } from "../constants";
 const reviewSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProductReviews: builder.query({
+      query: ({ productId, page, limit }) => ({
+        url: `${REVIEW_URL}/product/${productId}?page=${page}&limit=${limit}`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: (result, error, { productId }) => [
+        { type: "Review", id: productId },
+      ],
+    }),
+    getProductReviewsNoPerRating: builder.query({
       query: (productId) => ({
-        url: `${REVIEW_URL}/product/${productId}`,
+        url: `${REVIEW_URL}/product/reviews-per-rating/${productId}`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: (result, error, productId) => [
+        { type: "Review", id: productId },
+      ],
+    }),
+    getYourReviewForProduct: builder.query({
+      query: (productId) => ({
+        url: `${REVIEW_URL}/product-review/${productId}`,
         method: "GET",
       }),
       keepUnusedDataFor: 5,
@@ -54,6 +74,8 @@ const reviewSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetProductReviewsQuery,
+  useGetProductReviewsNoPerRatingQuery,
+  useGetYourReviewForProductQuery,
   usePostReviewMutation,
   useUpdateReviewMutation,
   useDeleteReviewMutation,

@@ -5,7 +5,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { HeartIcon } from "lucide-react";
 import { MdFavoriteBorder } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const TopProductCard = ({ product }) => {
   return (
@@ -35,18 +37,6 @@ const TopProductCard = ({ product }) => {
         <button className="bg-white/90 px-4 py-2  text-black rounded-xl mt-8 cursor-pointer">
           View Product...
         </button>
-      </div>
-      <div className="absolute right-1 top-1">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <MdFavoriteBorder size={30} color="white" className="" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Add to Cart</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
 import { IoMdLogOut } from "react-icons/io";
+import { MdFavorite } from "react-icons/md";
 
 import { Link, useLocation } from "react-router-dom";
 
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useLogoutMutation } from "@/redux/api/userSlice";
 import { logout } from "@/redux/features/auth/authSlice";
+import FavouritesCount from "./FavouritesCount";
 
 const Header = () => {
   const location = useLocation();
@@ -60,7 +62,17 @@ const Header = () => {
       </div>
       <div className="flex items-center justify-center px-4 space-x-3">
         <ToolTip Icon={<FaShoppingCart size={20} />} Text="Cart" />
-        <Link to={"/profile"}>
+        <Link className="relative cursor-pointer" to={"/favourites"}>
+          <ToolTip
+            Icon={<MdFavorite size={25} />}
+            Text="Favourites"
+            className={"cursor-pointer"}
+          />
+          <div className="absolute -bottom-1 -right-0">
+            <FavouritesCount />
+          </div>
+        </Link>
+        <Link to={"/profile"} className="cursor-pointer">
           {userInfo ? (
             <div className="w-10 h-10 rounded-full overflow-hidden">
               <img
@@ -76,12 +88,17 @@ const Header = () => {
 
         {!userInfo ? (
           <Link to={"/login"} state={{ redirect: location.pathname }}>
-            <ToolTip Icon={<IoMdLogIn size={20} />} Text="Login" />
+            <ToolTip
+              Icon={<IoMdLogIn size={20} />}
+              Text="Login"
+              className={"cursor-pointer"}
+            />
           </Link>
         ) : (
           <ToolTip
             Icon={<IoMdLogOut size={20} />}
             Text="Logout"
+            className={"cursor-pointer"}
             onClick={() => logoutHandler()}
           />
         )}

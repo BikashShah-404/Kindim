@@ -17,6 +17,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import AdminMenu from "./AdminMenu";
 
+// TODO:Something is wrong with countInStock , will have to check...
+
 const ProductCreate = () => {
   const [preview, setPreview] = useState(null);
   const [hovered, setHovered] = useState(false);
@@ -62,6 +64,8 @@ const ProductCreate = () => {
 
   const handleProductCreation = async (data) => {
     try {
+      console.log(data);
+
       if (!data.image?.name) {
         toast.error("Product-Image is required");
         return;
@@ -80,7 +84,7 @@ const ProductCreate = () => {
       if (response.status === 200) {
         reset();
         toast.success("Product Created...");
-        navigate("/");
+        // navigate("/");
       }
     } catch (err) {
       console.log(err);
@@ -201,7 +205,7 @@ const ProductCreate = () => {
                 required: "Product-Quantity is required",
                 valueAsNumber: true,
                 validate: (v) =>
-                  typeof v === "number" && !isNaN(v)
+                  typeof +v === "number" && !isNaN(+v)
                     ? true
                     : "Product-Quantity needs to be a number",
               })}
@@ -249,7 +253,7 @@ const ProductCreate = () => {
               {...register("countInStock", {
                 valueAsNumber: true,
                 validate: (v) =>
-                  typeof v === "number" && !isNaN(v)
+                  typeof +v === "number" && !isNaN(+v)
                     ? true
                     : "Needs to be a number",
               })}
