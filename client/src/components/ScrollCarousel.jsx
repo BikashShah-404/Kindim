@@ -11,13 +11,13 @@ const ScrollCarousel = ({ title, topProducts: data }) => {
     target: targetRef,
   });
 
-  const rawX = useTransform(scrollYProgress, [0, 1], ["1%", "-95%"]);
-  const x = useSpring(rawX, { stiffness: 100, damping: 30, mass: 0.5 });
+  const rawX = useTransform(scrollYProgress, [0, 1], ["1.5%", "-80%"]);
+  const x = useSpring(rawX, { stiffness: 100, damping: 50 });
 
   return (
     <div className="relative h-[300vh] will-change-transform" ref={targetRef}>
       <div
-        className="sticky top-0 h-[100vh] overflow-hidden bg-gradient-to-br from-black via-gray-700 to-gray-600 ;
+        className="sticky top-0 h-[100vh] overflow-hidden bg-gradient-to-br from-black via-gray-700 to-gray-600 
  "
       >
         <div className="absolute top-[10vh] left-8 font-semibold text-2xl text-white">

@@ -9,22 +9,22 @@ const HomeImage = () => {
   const discoverOpacity = useTransform(
     scrollYProgress,
     [0.1, 0.3, 0.45],
-    [1, 1, 0]
+    [1, 1, 0],
   );
   const scrollOpacity = useTransform(
     scrollYProgress,
     [0.45, 0.5, 0.65],
-    [0, 1, 0]
+    [0, 1, 0],
   );
   const shopOpacity = useTransform(
     scrollYProgress,
     [0.65, 0.75, 0.85],
-    [0, 1, 0]
+    [0, 1, 0],
   );
   const repeatOpacity = useTransform(
     scrollYProgress,
     [0.85, 0.9, 1],
-    [0, 1, 0.5]
+    [0, 1, 0.5],
   );
 
   return (

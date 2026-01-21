@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import { useGetProductByIdQuery } from "../../redux/api/productSlice.js";
@@ -23,9 +23,12 @@ import { IoStar } from "react-icons/io5";
 import HeartIcon from "@/components/HeartIcon.jsx";
 import RatingsPerReview from "@/components/RatingsPerReview.jsx";
 import ReviewForm from "@/components/ReviewForm.jsx";
+import { addToCart } from "@/redux/features/cart/cartSlice.js";
 
 const ProductDetail = () => {
   const { id: productId } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [qty, setQty] = useState(1);
   const [isReviewProductClicked, setIsReviewProductClicked] = useState(false);
@@ -44,8 +47,24 @@ const ProductDetail = () => {
   const { data: reviewOfUser } = useGetYourReviewForProductQuery(productId);
 
   const handleisReviewProductClicked = () => {
-    if (!userInfo) toast.info("Please Log in to post/update review...");
+    if (!userInfo) {
+      toast.info("Please Log in to post/update review...");
+      return;
+    }
     setIsReviewProductClicked(true);
+  };
+
+  const handleAddToCart = () => {
+    if (!userInfo) {
+      toast.info("Please Log in to add to cart...");
+      return;
+    }
+    const result = dispatch(addToCart({ ...product, qty }));
+    if (result?.meta?.duplicate) {
+      toast.info("Item is already in cart");
+    } else {
+      toast.success("Item added to Cart");
+    }
   };
 
   return isLoading ? (
@@ -137,7 +156,7 @@ const ProductDetail = () => {
             <button
               className={`bg-gradient-to-r from-black via-gray-700 to-gray-600 px-14 py-2 text-white rounded-md cursor-pointer flex  items-center space-x-2 `}
               type="button"
-              // onClick={handleAddToCart}
+              onClick={handleAddToCart}
               disabled={product.countInStock === 0}
             >
               <span>Add to Cart</span>
