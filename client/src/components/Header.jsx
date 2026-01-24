@@ -27,6 +27,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { TfiMenuAlt } from "react-icons/tfi";
+import { resetCart } from "@/redux/features/cart/cartSlice";
 
 const Header = () => {
   const location = useLocation();
@@ -41,6 +42,7 @@ const Header = () => {
     try {
       const response = await logoutApiCall().unwrap();
       if (response.status === 200) {
+        dispatch(resetCart());
         toast("See u soon...");
         dispatch(logout());
       }
@@ -165,13 +167,15 @@ const Header = () => {
                       Icon={
                         <div className="relative">
                           <FaShoppingCart size={20} />
-                          <div className="absolute -right-4 -top-4">
-                            {cartItems.length > 0 && (
-                              <div className="text-sm rounded-full bg-black w-5 h-5 flex items-center justify-center text-white">
-                                {cartItems.length}
-                              </div>
-                            )}
-                          </div>
+                          {userInfo && (
+                            <div className="absolute -right-4 -top-4">
+                              {cartItems.length > 0 && (
+                                <div className="text-sm rounded-full bg-black w-5 h-5 flex items-center justify-center text-white">
+                                  {cartItems.length}
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       }
                       Text="Cart"
