@@ -13,5 +13,5 @@ createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <Toast />
     <RouterProvider router={router} />
-  </Provider>
+  </Provider>,
 );

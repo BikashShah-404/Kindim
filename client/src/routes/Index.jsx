@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 
 import App from "../App.jsx";
-import Home from "../pages/users/Home.jsx";
+import Home from "../pages/Home.jsx";
 import Profile from "../pages/users/Profile.jsx";
 
 import AdminRoute from "@/routes/AdminRoute.jsx";
@@ -24,6 +24,7 @@ import ProductDetail from "@/pages/Product/ProductDetail.jsx";
 import Favourites from "@/pages/Product/Favourites.jsx";
 import ProductAllReview from "@/pages/review/ProductAllReview.jsx";
 import Cart from "@/pages/users/Cart.jsx";
+import Shop from "@/pages/Shop.jsx";
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -31,6 +32,7 @@ const routes = createRoutesFromElements(
     <Route path="/sign-up" element={<SignUp />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/" element={<Home />} />
+    <Route path="/shop" element={<Shop />} />
     <Route path="/favourites" element={<Favourites />} />
     <Route path="/profile" element={<Profile />} />
     <Route path="/orders" element={<Orders />} />

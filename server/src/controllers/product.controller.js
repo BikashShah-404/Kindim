@@ -16,11 +16,11 @@ const addProduct = asyncHandler(async (req, res) => {
   } = req.body;
   if (
     [name, brand, quantity, category, description].some(
-      (eachField) => eachField.trim() === ""
+      (eachField) => eachField.trim() === "",
     )
   )
     throw new Error(
-      "Product's name,brand,quantity,category,description all are required..."
+      "Product's name,brand,quantity,category,description all are required...",
     );
 
   const productImageLocalPath = req.file.path;
@@ -79,7 +79,7 @@ const updateProductDetails = asyncHandler(async (req, res) => {
         countInStock,
       },
     },
-    { new: true }
+    { new: true },
   );
 
   if (!updatedProduct)
@@ -243,6 +243,20 @@ const fetchNewProducts = asyncHandler(async (req, res) => {
   });
 });
 
+const filterProducts = asyncHandler(async (req, res) => {
+  const { checked, radio } = req.body;
+  let args = {};
+  if (checked.length > 0) args.category = checked;
+  if (radio.length > 0) args.price = { $gte: radio[0], $lte: radio[1] };
+
+  const products = await Product.find(args);
+  res.status(200).json({
+    status: 200,
+    data: products,
+    msg: "Filtered Products Fetched Successfully...",
+  });
+});
+
 export const productController = {
   addProduct,
   updateProductDetails,
@@ -253,4 +267,5 @@ export const productController = {
   fetchAllProducts,
   fetchTopProducts,
   fetchNewProducts,
+  filterProducts,
 };

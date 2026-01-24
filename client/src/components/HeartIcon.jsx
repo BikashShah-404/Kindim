@@ -27,7 +27,7 @@ const HeartIcon = ({ product }) => {
   const favourites = useSelector((state) => state.favourites) || [];
 
   const isFavourite = favourites.some(
-    (eachFavourite) => eachFavourite._id === product._id
+    (eachFavourite) => eachFavourite._id === product._id,
   );
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const HeartIcon = ({ product }) => {
           <MdFavorite
             size={30}
             color={isFavourite ? "red" : "white"}
-            className=""
+            className=" cursor-pointer"
             onClick={toogleFavourite}
           />
         </TooltipTrigger>

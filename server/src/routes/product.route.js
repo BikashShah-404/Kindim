@@ -14,6 +14,7 @@ router
 
 router.route("/top").get(productController.fetchTopProducts);
 router.route("/new").get(productController.fetchNewProducts);
+router.route("/filter-products").post(productController.filterProducts);
 
 router.route("/:productId").get(productController.fetchProductById);
 
@@ -23,7 +24,7 @@ router
     verifyJWT,
     authorizedAdmin,
     upload.single("image"),
-    productController.addProduct
+    productController.addProduct,
   );
 
 router
@@ -36,7 +37,7 @@ router
     verifyJWT,
     authorizedAdmin,
     upload.single("image"),
-    productController.updateProductImage
+    productController.updateProductImage,
   );
 
 router

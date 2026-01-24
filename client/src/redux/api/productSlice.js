@@ -77,6 +77,13 @@ const productSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
+    getFilterProducts: builder.query({
+      query: ({ checked, radio }) => ({
+        url: `${PRODUCT_URL}/filter-products`,
+        method: "POSt",
+        body: { checked, radio },
+      }),
+    }),
   }),
 });
 
@@ -90,4 +97,5 @@ export const {
   useUpdateProductDetailsMutation,
   useUpdateProductImageMutation,
   useDeleteProductMutation,
+  useGetFilterProductsQuery,
 } = productSlice;
