@@ -9,7 +9,7 @@ import { IoMdLogOut } from "react-icons/io";
 import { MdCancel, MdFavorite } from "react-icons/md";
 import { FaShop } from "react-icons/fa6";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, replace, useLocation, useNavigate } from "react-router-dom";
 
 import ToolTipComp from "./Tooltip";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,7 @@ import { logout } from "@/redux/features/auth/authSlice";
 import FavouritesCount from "./FavouritesCount";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -28,10 +28,13 @@ import {
 } from "./ui/tooltip";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { resetCart } from "@/redux/features/cart/cartSlice";
+import { setRadio } from "@/redux/features/shop/shopSlice.js";
 
 const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const searchTermRef = useRef();
   const [logoutApiCall] = useLogoutMutation();
   const { userInfo } = useSelector((state) => state.auth);
   console.log(userInfo);
@@ -54,6 +57,11 @@ const Header = () => {
 
   const { cartItems } = useSelector((state) => state.cart);
 
+  const handleSearchProduct = () => {
+    dispatch(setRadio([]));
+    navigate(`/shop`, { state: { query: searchTermRef.current.value } });
+  };
+
   return (
     <header className="w-full  h-16 rounded-b-md shadow-2xl pl-8 pr-2 flex items-center sticky z-10 top-0 bg-white">
       <Link to="/" className="h-full w-fit">
@@ -71,8 +79,12 @@ const Header = () => {
             type="text"
             placeholder="Search your buy..."
             className=" flex-1 hidden md:block md:min-w-96 rounded-lg py-2 placeholder:text-center border-2 border-gray-200 outline-0 pl-4 pr-10 transition-all duration-100 focus-within:shadow-xl"
+            ref={searchTermRef}
           />
-          <div className="relative right-9 bg-black  flex items-center justify-center w-10 rounded-2xl">
+          <div
+            className="relative right-9 bg-black  flex items-center justify-center w-10 rounded-2xl "
+            onClick={handleSearchProduct}
+          >
             <RiSearchLine className="" size={22} color="white" />
           </div>
         </div>

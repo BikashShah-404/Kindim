@@ -7,11 +7,7 @@ import HomeImage from "@/components/HomeImage";
 
 const Home = () => {
   const { page, limit, keyword } = useParams();
-  const { data, isLoading, isError } = useGetProductsQuery({
-    page,
-    limit,
-    keyword,
-  });
+
   return (
     <div className="scroll-smooth">
       <HomeImage />

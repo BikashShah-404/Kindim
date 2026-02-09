@@ -78,10 +78,10 @@ const productSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Product"],
     }),
     getFilterProducts: builder.query({
-      query: ({ checked, radio }) => ({
+      query: ({ checked, radio, keyword }) => ({
         url: `${PRODUCT_URL}/filter-products`,
-        method: "POSt",
-        body: { checked, radio },
+        method: "POST",
+        body: { checked, radio, keyword },
       }),
     }),
   }),

@@ -154,7 +154,7 @@ const Profile = () => {
             setCredentials({
               ...userInfo,
               profilePic: response.data.profilePic,
-            })
+            }),
           );
           setValue("profilePic", null);
           toast.success("ProfilePic Updated...");
@@ -173,7 +173,7 @@ const Profile = () => {
               ...store.getState().auth.userInfo,
               username: response.data.username,
               email: response.data.email,
-            })
+            }),
           );
           setIsUsernameEditable(false);
           setIsEmailEditable(false);
@@ -189,7 +189,7 @@ const Profile = () => {
             setCredentials({
               ...store.getState().auth.userInfo,
               username: response.data.username,
-            })
+            }),
           );
           setIsUsernameEditable(false);
           toast.success("Username Updated...");
@@ -204,7 +204,7 @@ const Profile = () => {
             setCredentials({
               ...store.getState().auth.userInfo,
               email: response.data.email,
-            })
+            }),
           );
           setIsEmailEditable(false);
           toast.success("Email Updated...");

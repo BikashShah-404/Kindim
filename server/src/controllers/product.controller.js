@@ -243,13 +243,135 @@ const fetchNewProducts = asyncHandler(async (req, res) => {
   });
 });
 
-const filterProducts = asyncHandler(async (req, res) => {
-  const { checked, radio } = req.body;
-  let args = {};
-  if (checked.length > 0) args.category = checked;
-  if (radio.length > 0) args.price = { $gte: radio[0], $lte: radio[1] };
+const makeQueryFromKeyword = (keyword) => {
+  const lowerCaseKeyword = keyword.toString().toLowerCase();
+  let checked = [];
+  let radio = [];
 
-  const products = await Product.find(args);
+  const categoryMatch = {
+    phone: ["phone"],
+    mobile: ["phone"],
+    fashion: ["shoes", "shirts"],
+    fitness: ["gym", "exercise"],
+    mouse: ["mouse"],
+    shirts: ["shirts"],
+    shoes: ["shoes"],
+    gym: ["gym"],
+    exercise: ["exercise"],
+  };
+
+  const matchedCategory =
+    categoryMatch[
+      Object.keys(categoryMatch).find((eachKey) => {
+        return lowerCaseKeyword
+          .split(" ")
+          .some((eachWord) => (eachWord === eachKey ? eachKey : null));
+      })
+    ];
+
+  let query;
+
+  const underMatch = lowerCaseKeyword.match(/under\s+(\d+)/);
+  const aboveMatch = lowerCaseKeyword.match(/above\s+(\d+)/);
+  const forMatch = lowerCaseKeyword.match(/for\s+(\d+)/);
+  const rangeMatch =
+    lowerCaseKeyword.match(/(\d+)\s+to\s+(\d+)/) ||
+    lowerCaseKeyword.match(/between\s+(\d+)\s+(?:and|-)\s+(\d+)/);
+
+  console.log(underMatch, aboveMatch, forMatch, rangeMatch);
+
+  if (underMatch) {
+    query = { $lte: parseFloat(underMatch[1]) };
+  } else if (aboveMatch) {
+    query = { $gte: parseFloat(aboveMatch[1]) };
+  } else if (forMatch) {
+    query = {
+      $lte: parseFloat(forMatch[1]) + 1000,
+      $gte: parseFloat(forMatch[1]) - 1000,
+    };
+  } else if (rangeMatch) {
+    query = {
+      $lte: parseFloat(rangeMatch[2]),
+      $gte: parseFloat(rangeMatch[1]),
+    };
+  }
+  console.log({ matchedCategory, query });
+
+  return { matchedCategory, query };
+};
+
+const filterProducts = asyncHandler(async (req, res) => {
+  const { checked, radio, keyword } = req.body;
+  let args = {};
+  console.log(keyword);
+
+  const DBquery = [];
+  let products;
+
+  if (keyword) {
+    const { matchedCategory, query } = makeQueryFromKeyword(keyword);
+    args.category = matchedCategory;
+    args.price = query;
+    console.log(radio.length);
+
+    if (radio.length > 0) {
+      if (radio[1]) {
+        args.price = { $gte: parseFloat(radio[1]) };
+      } else if (radio[0]) {
+        args.price = { $lte: parseFloat(radio[0]) };
+      } else if (radio[0] && radio[1]) {
+        args.price = { $gte: parseFloat(radio[1]), $lte: parseFloat(radio[0]) };
+      }
+    }
+  } else {
+    if (checked.length > 0) args.category = [...checked];
+    if (radio.length > 0) {
+      if (radio[1]) {
+        args.price = { $gte: radio[1] };
+      } else if (radio[0]) {
+        args.price = { $lte: radio[0] };
+      } else if (radio[0] && radio[1]) {
+        args.price = { $gte: radio[1], $lte: radio[0] };
+      }
+    }
+  }
+
+  console.log(args);
+
+  if (keyword) {
+    DBquery.push(
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $addFields: {
+          category: { $first: "$category.name" },
+        },
+      },
+      {
+        $match: {
+          ...(args.category?.length
+            ? { category: { $in: args.category } }
+            : {}),
+          ...(args.price
+            ? {
+                price: args.price,
+              }
+            : {}),
+        },
+      },
+    );
+    products = await Product.aggregate(DBquery);
+  } else {
+    products = await Product.find(args);
+  }
+
+  console.log(products);
   res.status(200).json({
     status: 200,
     data: products,

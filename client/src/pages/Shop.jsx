@@ -7,49 +7,64 @@ import {
   setCategories,
   setProducts,
   setChecked,
+  setRadio,
 } from "@/redux/features/shop/shopSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../components/ProductCard";
+import { useLocation } from "react-router-dom";
 
 const Shop = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { categories, products, checked, radio } = useSelector(
     (state) => state.shop,
   );
 
   const categoriesQuery = useGetAllCategoriesQuery();
   const [priceFilter, setPriceFilter] = useState(0);
+  const [debouncedPrice, setDebouncedPrice] = useState(0);
   const [priceFilterType, setPriceFilterType] = useState("min");
 
-  const filteredProductQuery = useGetFilterProductsQuery({ checked, radio });
+  const keyword = location.state?.query || "";
+
+  const filteredProductQuery = useGetFilterProductsQuery({
+    checked,
+    radio,
+    keyword,
+  });
 
   useEffect(() => {
-    if (!categoriesQuery.isLoading) {
-      dispatch(setCategories(categoriesQuery.data.data));
+    if (!filteredProductQuery.isLoading) {
+      const filteredProducts = filteredProductQuery.data?.data;
+      dispatch(setProducts(filteredProducts));
     }
-  }, [categoriesQuery, categoriesQuery.data, dispatch]);
-
-  useEffect(() => {
-    if (!checked.length || !radio.length) {
-      if (!filteredProductQuery.isLoading) {
-        const filteredProducts = filteredProductQuery.data?.data.filter(
-          (product) => {
-            return priceFilterType === "max"
-              ? product.price <= Number(priceFilter)
-              : product.price >= Number(priceFilter);
-          },
-        );
-        dispatch(setProducts(filteredProducts));
-      }
+    if (radio.length === 0) {
+      setPriceFilter(0);
     }
   }, [
-    checked,
     radio,
     filteredProductQuery.data,
     dispatch,
-    priceFilter,
     priceFilterType,
+    filteredProductQuery,
   ]);
+
+  useEffect(() => {
+    if (keyword) {
+      dispatch(
+        setCategories(
+          Array.from(
+            new Set(products.map((eachProduct) => eachProduct.category)),
+          ).map((eachUniqueCategory, index) => ({
+            _id: index,
+            name: eachUniqueCategory,
+          })),
+        ),
+      );
+    } else if (!categoriesQuery.isLoading) {
+      dispatch(setCategories(categoriesQuery.data.data));
+    }
+  }, [categoriesQuery, categoriesQuery.data, dispatch, products, keyword]);
 
   const handleBrandClick = (brand) => {
     const productsByBrand = filteredProductQuery.data?.data?.filter(
@@ -75,6 +90,25 @@ const Shop = () => {
     ),
   ];
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedPrice(priceFilter);
+    }, 800);
+    return () => clearTimeout(handler);
+  }, [priceFilter]);
+
+  useEffect(() => {
+    if (debouncedPrice) {
+      dispatch(
+        setRadio(
+          priceFilterType === "min"
+            ? [null, debouncedPrice]
+            : [debouncedPrice, null],
+        ),
+      );
+    }
+  }, [debouncedPrice, priceFilterType, dispatch]);
+
   const handlePriceChange = (e) => {
     setPriceFilter(e.target.value);
   };
@@ -95,6 +129,7 @@ const Shop = () => {
                   <input
                     type="checkbox"
                     id={`checkbox-${c._id}`}
+                    defaultChecked={keyword ? true : false}
                     onChange={(e) => handleCheck(e.target.checked, c._id)}
                     className="h-5 w-5 rounded-md  border-gray-400 hover:ring-1 ring-offset-black ring-chart-3 ring-offset-1  focus:ring-accent-foreground cursor-pointer accent-black "
                   />
@@ -171,7 +206,7 @@ const Shop = () => {
             </h2>
             <div className="w-full  flex flex-col space-y-10 text-white mt-10 ">
               {products.length === 0 ? (
-                <>Loading...</>
+                <>No Products Found...</>
               ) : (
                 products.map((product) => (
                   <div className="" key={product._id}>

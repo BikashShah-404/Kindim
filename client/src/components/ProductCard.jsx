@@ -26,8 +26,8 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
           <div className=" text-sm   flex-1 flex flex-col  justify-center w-fit   ">
-            {product.description.split(",").map((t) => (
-              <p>{t}</p>
+            {product.description.split(",").map((t, i) => (
+              <p key={i}>{t}</p>
             ))}
           </div>
           <div>{product.numReviews} reviews</div>
