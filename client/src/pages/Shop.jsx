@@ -62,7 +62,7 @@ const Shop = () => {
         ),
       );
     } else if (!categoriesQuery.isLoading) {
-      dispatch(setCategories(categoriesQuery.data.data));
+      dispatch(setCategories(categoriesQuery?.data?.data));
     }
   }, [categoriesQuery, categoriesQuery.data, dispatch, products, keyword]);
 
@@ -124,7 +124,7 @@ const Shop = () => {
               </h2>
             </div>
             <div className="p-5 w-[10rem] flex flex-col space-y-2 ">
-              {categories.map((c) => (
+              {categories?.map((c) => (
                 <div key={c._id} className="flex items-center  space-x-2">
                   <input
                     type="checkbox"

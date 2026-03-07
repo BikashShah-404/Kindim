@@ -8,9 +8,7 @@ router
   .route("/")
   .post(verifyJWT, authorizedAdmin, categoryController.createCategory);
 
-router
-  .route("/categories")
-  .get(verifyJWT, authorizedAdmin, categoryController.getAllCategories);
+router.route("/categories").get(categoryController.getAllCategories);
 
 router
   .route("/:categoryId")
