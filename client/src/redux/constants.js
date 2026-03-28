@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_SERVER_URL || "/api";
+export const BASE_URL = import.meta.env.VITE_SERVER_URL || ""; //remove import if testing locally
 
 export const USERS_URL = "/api/v1/users";
 export const CATEGORY_URL = "/api/v1/category";

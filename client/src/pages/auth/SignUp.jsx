@@ -355,7 +355,9 @@ const SignUp = () => {
             <div className="w-full mt-3  flex flex-col md:flex-row items-center space-y-4 md:space-y-0   md:justify-center md:space-x-30  ">
               <button
                 className={`bg-black px-14 py-2 text-white rounded-md  ${
-                  currentStep === 0 ? "opacity-50 cursor-not-allowed" : ""
+                  currentStep === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
                 disabled={currentStep === 0}
                 onClick={prevStep}
@@ -366,7 +368,7 @@ const SignUp = () => {
               {currentStep === 0 && (
                 <button
                   type="button"
-                  className="bg-black px-14 py-2 text-white rounded-md  "
+                  className="bg-black px-14 py-2 text-white rounded-md cursor-pointer  "
                   onClick={nextStep}
                 >
                   Next
@@ -375,7 +377,7 @@ const SignUp = () => {
               {currentStep === steps.length - 1 && (
                 <button
                   type="submit"
-                  className="bg-black px-14 py-2 text-white rounded-md  "
+                  className="bg-black px-14 py-2 text-white rounded-md cursor-pointer "
                 >
                   {isSubmitting
                     ? "Registering..."

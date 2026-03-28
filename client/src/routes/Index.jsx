@@ -37,9 +37,10 @@ const routes = createRoutesFromElements(
     path="/"
     element={<App />}
     errorElement={
-      <div style={{ padding: 20 }}>
-        <h1>Error occurred</h1>
-        <p>Check console for details</p>
+      <div className="w-[100%] h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-700 to-gray-900">
+        <h1 className="text-4xl text-secondary font-alegreya">
+          Something Went Wrong! Try Again.
+        </h1>
       </div>
     }
   >
