@@ -80,15 +80,15 @@ const login = asyncHandler(async (req, res) => {
 
   const accessTokenOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
     maxAge: 60 * 60 * 1000,
   };
 
   const refreshTokenOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
+    secure: "true",
+    sameSite: "none",
     maxAge: 10 * 24 * 60 * 60 * 1000,
   };
 
@@ -121,11 +121,6 @@ const logout = asyncHandler(async (req, res) => {
     { new: true },
   );
 
-  const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
-  };
-
   res.status(200).clearCookie("accessToken").clearCookie("refreshToken").json({
     status: 200,
     data: {},
@@ -155,15 +150,15 @@ const refresh = asyncHandler(async (req, res) => {
 
   const accessTokenOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
     maxAge: 60 * 60 * 1000,
   };
 
   const refreshTokenOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
     maxAge: 10 * 24 * 60 * 60 * 1000,
   };
 
