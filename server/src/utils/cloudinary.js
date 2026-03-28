@@ -5,6 +5,7 @@ cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
 });
 
 export const uploadOnCloudinary = async (localFilePath) => {
@@ -30,7 +31,7 @@ export const deleteAsset = async (assetPublicId) => {
   try {
     const response = await cloudinary.uploader.destroy(assetPublicId);
     console.log(response);
-    
+
     return response;
   } catch (error) {
     console.log(error);
