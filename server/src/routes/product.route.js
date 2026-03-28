@@ -16,6 +16,13 @@ router.route("/top").get(productController.fetchTopProducts);
 router.route("/new").get(productController.fetchNewProducts);
 router.route("/filter-products").post(productController.filterProducts);
 
+router.route("/brands").get(productController.getAllBrands);
+router.route("/top-product").get(productController.getTopSellingProduct);
+
+router
+  .route("/category/product-count")
+  .get(productController.getProductCountByCategory);
+
 router.route("/:productId").get(productController.fetchProductById);
 
 router

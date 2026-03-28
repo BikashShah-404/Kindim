@@ -67,7 +67,11 @@ const ReviewForm = ({ toogle, productId, reviewOfUser }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-35  overflow-hidden">
       <form onSubmit={handleSubmit(handleReviewPost)} className="w-1/3">
-        <Card>
+        <Card
+          className={
+            "bg-linear-to-r text-secondary  from-black via-gray-800 to-gray-900"
+          }
+        >
           <CardHeader>
             <CardTitle>
               {reviewOfUser ? "Update Review" : "Post Review"}
@@ -79,6 +83,7 @@ const ReviewForm = ({ toogle, productId, reviewOfUser }) => {
                 Text={"Cancel"}
                 onClick={() => toogle(false)}
                 type={"button"}
+                className={"text-black"}
               />
             </CardAction>
           </CardHeader>

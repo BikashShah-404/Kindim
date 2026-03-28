@@ -19,6 +19,7 @@ import { MdDeleteForever } from "react-icons/md";
 import AdminMenu from "./AdminMenu";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Spinner } from "@/components/ui/spinner";
 
 const ProductUpdate = () => {
   const [preview, setPreview] = useState(null);
@@ -140,234 +141,235 @@ const ProductUpdate = () => {
       }
     }
   };
-  return (
-    !isLoading && (
-      <div className="w-full h-[calc(100vh-64px)] flex flex-col">
-        <AdminMenu />
-        <form
-          className=" flex flex-col space-y-4 md:space-y-8 p-6 md:p-10 "
-          onSubmit={handleSubmit(handleProductUpdate)}
-        >
-          <div className="flex flex-row items-center space-x-4 sm:pl-10">
-            <p>Product Image :</p>
-            <div className="w-60 h-40 min-h-40 rounded-3xl overflow-hidden mt-10 relative">
-              <img
-                src={preview ? preview : product?.image}
-                alt="profilePic.png"
-                className="object-cover w-full h-full"
-              />
-              <div
-                role="button"
-                onMouseDown={(e) => e.preventDefault()}
-                className={`absolute inset-0 hover:bg-gray-200/50  flex rounded-3xl  items-center justify-center ${
-                  isSubmitting ? "cursor-wait" : "cursor-pointer"
-                }`}
-                onClick={
-                  preview ? handleProductImageRemove : handleProductImageClick
-                }
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
-              >
-                {hovered && !isSubmitting && (
-                  <>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          {preview ? (
-                            <MdDeleteForever
-                              size={30}
-                              color="red"
-                              className={`${
-                                isSubmitting ? "cursor-wait" : "cursor-pointer"
-                              }`}
-                            />
-                          ) : (
-                            <FaFileUpload
-                              size={30}
-                              className={`${
-                                isSubmitting ? "cursor-wait" : "cursor-pointer"
-                              }`}
-                            />
-                          )}
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>
-                            {preview
-                              ? "Discard Change"
-                              : "Upload Product Image"}
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </>
-                )}
-              </div>
-              <input
-                type="file"
-                ref={imageRef}
-                accept=".png, .jpg, .jpeg, .svg ,.webp"
-                name="profilePic"
-                onChange={handleProductImageChange}
-                className="hidden"
-              />
+  return !isLoading ? (
+    <div className="w-full h-[calc(100vh-64px)] flex flex-col  bg-gradient-to-br from-black via-gray-700 to-gray-600 text-secondary">
+      <AdminMenu />
+      <form
+        className=" flex flex-col space-y-4 md:space-y-8 p-6 md:p-10 "
+        onSubmit={handleSubmit(handleProductUpdate)}
+      >
+        <div className="flex flex-row items-center space-x-4 sm:pl-10">
+          <p>Product Image :</p>
+          <div className="w-60 h-40 min-h-40 rounded-3xl overflow-hidden mt-10 relative">
+            <img
+              src={preview ? preview : product?.image}
+              alt="profilePic.png"
+              className="object-cover w-full h-full"
+            />
+            <div
+              role="button"
+              onMouseDown={(e) => e.preventDefault()}
+              className={`absolute inset-0 hover:bg-gray-200/50  flex rounded-3xl  items-center justify-center ${
+                isSubmitting ? "cursor-wait" : "cursor-pointer"
+              }`}
+              onClick={
+                preview ? handleProductImageRemove : handleProductImageClick
+              }
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+            >
+              {hovered && !isSubmitting && (
+                <>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        {preview ? (
+                          <MdDeleteForever
+                            size={30}
+                            color="red"
+                            className={`${
+                              isSubmitting ? "cursor-wait" : "cursor-pointer"
+                            }`}
+                          />
+                        ) : (
+                          <FaFileUpload
+                            size={30}
+                            className={`${
+                              isSubmitting ? "cursor-wait" : "cursor-pointer"
+                            }`}
+                          />
+                        )}
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          {preview ? "Discard Change" : "Upload Product Image"}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </>
+              )}
             </div>
+            <input
+              type="file"
+              ref={imageRef}
+              accept=".png, .jpg, .jpeg, .svg ,.webp"
+              name="profilePic"
+              onChange={handleProductImageChange}
+              className="hidden"
+            />
           </div>
-          <div className="flex flex-col md:flex-row md:w-4/5">
-            <div className="flex flex-col w-full -space-y-3">
-              <Input
-                label="Name :"
-                name="name"
-                type="text"
-                className=""
-                {...register("name", { required: "Product-Name is required" })}
-              />
-              {errors.name && (
-                <p className="text-red-700 ml-6">{errors.name.message}...</p>
-              )}
-            </div>
-            <div className="flex flex-col w-full -space-y-3">
-              <Input
-                label="Price :"
-                name="price"
-                type="text"
-                className=""
-                {...register("price", {
-                  required: "Product-Price is required",
-                  valueAsNumber: true,
-                  validate: (v) =>
-                    typeof v === "number" && !isNaN(v)
-                      ? true
-                      : "Product-Price needs to be a number",
-                })}
-              />
-              {errors.price && (
-                <p className="text-red-700 ml-6">{errors.price.message}...</p>
-              )}
-            </div>
+        </div>
+        <div className="flex flex-col md:flex-row md:w-4/5">
+          <div className="flex flex-col w-full -space-y-3">
+            <Input
+              label="Name :"
+              name="name"
+              type="text"
+              className=""
+              {...register("name", { required: "Product-Name is required" })}
+            />
+            {errors.name && (
+              <p className="text-red-700 ml-6">{errors.name.message}...</p>
+            )}
           </div>
-          <div className="flex flex-col md:flex-row md:w-4/5">
-            <div className="flex flex-col w-full -space-y-3">
-              <Input
-                label="Quantity :"
-                name="quantity"
-                type="text"
-                className=""
-                {...register("quantity", {
-                  required: "Product-Quantity is required",
-                  valueAsNumber: true,
-                  validate: (v) =>
-                    typeof v === "number" && !isNaN(v)
-                      ? true
-                      : "Product-Quantity needs to be a number",
-                })}
-              />
-              {errors.quantity && (
-                <p className="text-red-700 ml-6">
-                  {errors.quantity.message}...
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col w-full -space-y-3">
-              <Input
-                label="Brand :"
-                name="brand"
-                type="text"
-                className=""
-                {...register("brand", {
-                  required: "Product-Brand is required",
-                })}
-              />
-              {errors.brand && (
-                <p className="text-red-700 ml-6">{errors.brand.message}...</p>
-              )}
-            </div>
+          <div className="flex flex-col w-full -space-y-3">
+            <Input
+              label="Price :"
+              name="price"
+              type="text"
+              className=""
+              {...register("price", {
+                required: "Product-Price is required",
+                valueAsNumber: true,
+                validate: (v) =>
+                  typeof v === "number" && !isNaN(v)
+                    ? true
+                    : "Product-Price needs to be a number",
+              })}
+            />
+            {errors.price && (
+              <p className="text-red-700 ml-6">{errors.price.message}...</p>
+            )}
           </div>
-          <div className="flex flex-col space-y-2 w-full md:w-4/5 px-6">
-            <label htmlFor="description">Description:</label>
-            <div className="flex flex-col w-full ">
-              <textarea
-                className="w-full md:w-[80%]   max-w-full h-24 resize bg-gray-800 text-white rounded-lg px-8 py-4"
-                {...register("description", {
-                  required: "Product-Description is required",
-                })}
-              />
-              {errors.description && (
-                <p className="text-red-700 ">{errors.description.message}...</p>
-              )}
-            </div>
+        </div>
+        <div className="flex flex-col md:flex-row md:w-4/5">
+          <div className="flex flex-col w-full -space-y-3">
+            <Input
+              label="Quantity :"
+              name="quantity"
+              type="text"
+              className=""
+              {...register("quantity", {
+                required: "Product-Quantity is required",
+                valueAsNumber: true,
+                validate: (v) =>
+                  typeof v === "number" && !isNaN(v)
+                    ? true
+                    : "Product-Quantity needs to be a number",
+              })}
+            />
+            {errors.quantity && (
+              <p className="text-red-700 ml-6">{errors.quantity.message}...</p>
+            )}
           </div>
-          <div className="flex flex-col md:flex-row md:w-4/5  items-center ">
-            <div className="flex flex-col w-full -space-y-3">
-              <Input
-                label="Count In Stock :"
-                name="countInStock"
-                type="text"
-                className=" "
-                {...register("countInStock", {
-                  valueAsNumber: true,
-                  validate: (v) =>
-                    typeof v === "number" && !isNaN(v)
-                      ? true
-                      : "Needs to be a number",
-                })}
-              />
-              {errors.countInStock && (
-                <p className="text-red-700 ml-6">
-                  {errors.countInStock.message}...
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col justify-center space-y-2 w-full h-full px-6 md:px-2 mb-[0.6rem] ">
-              <label htmlFor="description">Choose Category:</label>
+          <div className="flex flex-col w-full -space-y-3">
+            <Input
+              label="Brand :"
+              name="brand"
+              type="text"
+              className=""
+              {...register("brand", {
+                required: "Product-Brand is required",
+              })}
+            />
+            {errors.brand && (
+              <p className="text-red-700 ml-6">{errors.brand.message}...</p>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col space-y-2 w-full md:w-4/5 px-6">
+          <label htmlFor="description">Description:</label>
+          <div className="flex flex-col w-full ">
+            <textarea
+              className="w-full md:w-[80%]   max-w-full h-24 resize bg-gray-800 text-white rounded-lg px-8 py-4"
+              {...register("description", {
+                required: "Product-Description is required",
+              })}
+            />
+            {errors.description && (
+              <p className="text-red-700 ">{errors.description.message}...</p>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row md:w-4/5  items-center ">
+          <div className="flex flex-col w-full -space-y-3">
+            <Input
+              label="Count In Stock :"
+              name="countInStock"
+              type="text"
+              className=" "
+              {...register("countInStock", {
+                valueAsNumber: true,
+                validate: (v) =>
+                  typeof v === "number" && !isNaN(v)
+                    ? true
+                    : "Needs to be a number",
+              })}
+            />
+            {errors.countInStock && (
+              <p className="text-red-700 ml-6">
+                {errors.countInStock.message}...
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col justify-center space-y-2 w-full h-full px-6 md:px-2 mb-[0.6rem] ">
+            <label htmlFor="description">Choose Category:</label>
 
-              <select
-                className="w-full h-fit bg-gray-800 text-white p-3.5 rounded-lg self-center"
-                {...register("category", {
-                  required: "Product-Category is required",
-                })}
-                defaultValue={product.category}
-              >
-                {categories &&
-                  categories.data.map((eachCategory) => (
-                    <option
-                      key={eachCategory._id}
-                      className="bg-gray-800 text-white"
-                      value={eachCategory._id}
-                    >
-                      {eachCategory.name}
-                    </option>
-                  ))}
-              </select>
-            </div>
+            <select
+              className="w-full h-fit bg-gray-800 text-white p-3.5 rounded-lg self-center"
+              {...register("category", {
+                required: "Product-Category is required",
+              })}
+              defaultValue={product.category}
+            >
+              {categories &&
+                categories.data.map((eachCategory) => (
+                  <option
+                    key={eachCategory._id}
+                    className="bg-gray-800 text-white"
+                    value={eachCategory._id}
+                  >
+                    {eachCategory.name}
+                  </option>
+                ))}
+            </select>
           </div>
-          <div className="mt-8 md:mt-2 w-full  flex flex-col space-y-8 sm:flex-row sm:space-x-20 sm:pl-10 ">
-            <div className="w-full sm:w-fit">
-              <button
-                className={`bg-black w-full md:w-auto px-14 py-2 text-white rounded-md ${
-                  isSubmitting ? "cursor-wait" : "cursor-pointer"
-                }`}
-                disabled={isSubmitting}
-                type="submit"
-              >
-                {isSubmitting ? "Updating" : "Update Product"}
-              </button>
-            </div>
-            <div className="w-full sm:w-fit">
-              <button
-                className={`bg-black w-full md:w-auto px-14 py-2 text-white rounded-md ${
-                  isSubmitting ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
-                disabled={isSubmitting}
-                type="button"
-                onClick={handleProductDelete}
-              >
-                {isSubmitting ? "Deleting" : "Delete Product"}
-              </button>
-            </div>
+        </div>
+        <div className="mt-8 md:mt-2 w-full  flex flex-col space-y-8 sm:flex-row sm:space-x-20 sm:pl-10 ">
+          <div className="w-full sm:w-fit">
+            <button
+              className={`bg-black w-full md:w-auto px-14 py-2 text-white rounded-md ${
+                isSubmitting ? "cursor-wait" : "cursor-pointer"
+              }`}
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? "Updating" : "Update Product"}
+            </button>
           </div>
-        </form>
+          <div className="w-full sm:w-fit">
+            <button
+              className={`bg-black w-full md:w-auto px-14 py-2 text-white rounded-md ${
+                isSubmitting ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
+              disabled={isSubmitting}
+              type="button"
+              onClick={handleProductDelete}
+            >
+              {isSubmitting ? "Deleting" : "Delete Product"}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  ) : (
+    <div className="flex items-center justify-center w-full h-screen bg-gradient-to-br from-black via-gray-700 to-gray-600 text-secondary ">
+      <div className="flex items-center gap-x-4 h-fit  shadow-2xl w-fit bg-gradient-to-tl from-black via-gray-600 to-gray-500 py-2 px-6 rounded-2xl  ">
+        <Spinner className={"h-10 w-10 "} />
+        <span className="text-secondary font-semibold">Updating Product.</span>
       </div>
-    )
+    </div>
   );
 };
 

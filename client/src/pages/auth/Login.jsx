@@ -5,7 +5,7 @@ import { FaEye } from "react-icons/fa";
 import { IoIosEyeOff } from "react-icons/io";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, Link, useLocation, replace } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import Input from "../../components/Input.jsx";
@@ -14,6 +14,7 @@ import { setCredentials } from "../../redux/features/auth/authSlice.js";
 import { useLoginMutation } from "../../redux/api/userSlice.js";
 
 import { useForm } from "react-hook-form";
+import { resetCart } from "@/redux/features/cart/cartSlice";
 
 const Login = () => {
   const {
@@ -33,21 +34,31 @@ const Login = () => {
   console.log(location);
 
   const redirect = location.state?.redirect || "/";
+  console.log(redirect);
 
   useEffect(() => {
     // This is because since we r uisng redirect hadn't it been checked whether it startsWith "/" then we can basically inject any url in the /login?redirect="https://myPhisingWebsite.com" and would have risked security so we check this so that we cannot go to any external url.
     if (!redirect?.startsWith("/")) {
       navigate("/"); // Prevents external redirects
     }
-    if (userInfo) navigate(redirect);
+    if (userInfo) navigate(redirect, { replace: true });
   }, [userInfo, navigate, redirect]);
 
   const handleLogin = async (data) => {
     try {
+      const previousUserId = localStorage.getItem("previousUserId");
+      console.log(previousUserId);
+
       const response = await login(data).unwrap();
       console.log(response);
 
       if (response.status === 200) {
+        console.log(response.data._id);
+
+        if (previousUserId && previousUserId !== response.data._id) {
+          dispatch(resetCart());
+        }
+        localStorage.setItem("previousUserId", response.data._id);
         dispatch(setCredentials(response.data));
         toast.success(`Good to see u back , ${response.data.username}`);
       }
@@ -60,8 +71,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="w-[100vw] h-[100vh] absolute inset-0 backdrop-blur-xs flex items-center justify-center">
-      <div className="flex items-center w-3/4 md:w-4/5 lg:2/3 h-4/5 max-w-6xl p-2 rounded-2xl shadow-2xl bg-accent">
+    <div className="z-10 fixed bg-black/30 inset-0   backdrop-blur-[2px] flex items-center justify-center ">
+      <div className="flex items-center w-3/4 md:w-4/5 lg:2/3 h-4/5 max-w-6xl p-2 rounded-2xl shadow-2xl  bg-gradient-to-l text-secondary  from-black via-gray-600 to-gray-500">
         <div className=" hidden md:block h-full md:w-1/2 ">
           <img
             src={LoginSideImg}

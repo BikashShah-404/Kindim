@@ -3,24 +3,18 @@ import { Product } from "../models/product.modal.js";
 
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { deleteAsset, uploadOnCloudinary } from "../utils/cloudinary.js";
+import { Order } from "../models/order.model.js";
 
 const addProduct = asyncHandler(async (req, res) => {
-  const {
-    name,
-    brand,
-    quantity,
-    category,
-    description,
-    price,
-    // countInStock,
-  } = req.body;
+  const { name, brand, quantity, category, description, price, countInStock } =
+    req.body;
   if (
-    [name, brand, quantity, category, description].some(
+    [name, brand, quantity, category, description, countInStock].some(
       (eachField) => eachField.trim() === "",
     )
   )
     throw new Error(
-      "Product's name,brand,quantity,category,description all are required...",
+      "Product's name,brand,quantity,category,description and countInStock all are required...",
     );
 
   const productImageLocalPath = req.file.path;
@@ -38,6 +32,7 @@ const addProduct = asyncHandler(async (req, res) => {
     description,
     price,
     quantity,
+    countInStock,
     image: productImage.url,
   });
   await product.save();
@@ -183,7 +178,6 @@ const fetchProducts = asyncHandler(async (req, res) => {
 const fetchProductById = asyncHandler(async (req, res) => {
   const { productId } = req.params;
 
-  //  TODO: we need to make aggregation and all to provide reviews and ratings too...
   const DBquery = [];
 
   DBquery.push({
@@ -200,7 +194,7 @@ const fetchProductById = asyncHandler(async (req, res) => {
 });
 
 const fetchAllProducts = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 20 } = req.params;
+  const { page = 1, limit = 10 } = req.query;
 
   const products = await Product.aggregatePaginate(Product.aggregate([]), {
     page: +page,
@@ -222,7 +216,7 @@ const fetchAllProducts = asyncHandler(async (req, res) => {
 });
 
 const fetchTopProducts = asyncHandler(async (req, res) => {
-  const topProducts = await Product.find({}).sort({ rating: -1 }).limit(6);
+  const topProducts = await Product.find({}).sort({ rating: -1 }).limit(8);
   if (!topProducts) throw new Error("Error while fetching the top products...");
 
   res.status(200).json({
@@ -233,7 +227,7 @@ const fetchTopProducts = asyncHandler(async (req, res) => {
 });
 
 const fetchNewProducts = asyncHandler(async (req, res) => {
-  const newProducts = await Product.find({}).sort({ createdAt: -1 }).limit(6);
+  const newProducts = await Product.find({}).sort({ createdAt: -1 }).limit(8);
   if (!newProducts) throw new Error("Error while fetching the new products...");
 
   res.status(200).json({
@@ -250,24 +244,24 @@ const makeQueryFromKeyword = (keyword) => {
 
   const categoryMatch = {
     phone: ["phone"],
+    laptop: ["laptop"],
     mobile: ["phone"],
     fashion: ["shoes", "shirts"],
     fitness: ["gym", "exercise"],
     mouse: ["mouse"],
     shirts: ["shirts"],
     shoes: ["shoes"],
+    camera: ["camera"],
     gym: ["gym"],
+    sofa: ["sofa"],
     exercise: ["exercise"],
   };
 
-  const matchedCategory =
-    categoryMatch[
-      Object.keys(categoryMatch).find((eachKey) => {
-        return lowerCaseKeyword
-          .split(" ")
-          .some((eachWord) => (eachWord === eachKey ? eachKey : null));
-      })
-    ];
+  const matchedCategory = Object.keys(categoryMatch)
+    .filter((eachKey) =>
+      lowerCaseKeyword.split(" ").some((eachWord) => eachWord === eachKey),
+    )
+    .flatMap((eachKey) => categoryMatch[eachKey]);
 
   let query;
 
@@ -301,7 +295,11 @@ const makeQueryFromKeyword = (keyword) => {
 };
 
 const filterProducts = asyncHandler(async (req, res) => {
-  const { checked, radio, keyword } = req.body;
+  const { checked, brands, radio, keyword } = req.body;
+
+  console.log(req.body);
+
+  const { page = 1, limit = 10 } = req.query;
   let args = {};
   console.log(keyword);
 
@@ -324,14 +322,17 @@ const filterProducts = asyncHandler(async (req, res) => {
       }
     }
   } else {
-    if (checked.length > 0) args.category = [...checked];
+    if (checked.length > 0) {
+      args.category = [...checked];
+    }
+    if (brands.length > 0) args.brands = [...brands];
     if (radio.length > 0) {
       if (radio[1]) {
-        args.price = { $gte: radio[1] };
+        args.price = { $gte: parseFloat(radio[1]) };
       } else if (radio[0]) {
-        args.price = { $lte: radio[0] };
+        args.price = { $lte: parseFloat(radio[0]) };
       } else if (radio[0] && radio[1]) {
-        args.price = { $gte: radio[1], $lte: radio[0] };
+        args.price = { $gte: parseFloat(radio[1]), $lte: parseFloat(radio[0]) };
       }
     }
   }
@@ -358,6 +359,7 @@ const filterProducts = asyncHandler(async (req, res) => {
           ...(args.category?.length
             ? { category: { $in: args.category } }
             : {}),
+          ...(args.brands?.length ? { brand: { $in: args.brands } } : {}),
           ...(args.price
             ? {
                 price: args.price,
@@ -366,16 +368,140 @@ const filterProducts = asyncHandler(async (req, res) => {
         },
       },
     );
-    products = await Product.aggregate(DBquery);
+    products = await Product.aggregatePaginate(Product.aggregate(DBquery), {
+      page: +page,
+      limit: +limit,
+    });
   } else {
-    products = await Product.find(args);
+    console.log(args);
+
+    DBquery.push({
+      $match: {
+        ...(args.category?.length
+          ? {
+              category: {
+                $in: args.category.map(
+                  (eachCategory) => new mongoose.Types.ObjectId(eachCategory),
+                ),
+              },
+            }
+          : {}),
+        ...(args.brands?.length ? { brand: { $in: args.brands } } : {}),
+        ...(args.price
+          ? {
+              price: args.price,
+            }
+          : {}),
+      },
+    });
+    products = await Product.aggregatePaginate(Product.aggregate(DBquery), {
+      page: +page,
+      limit: +limit,
+    });
   }
 
   console.log(products);
+
   res.status(200).json({
     status: 200,
-    data: products,
+    data: {
+      data: products.docs,
+      currentPage: +page,
+      limit: +limit,
+      totalDocs: products.totalDocs || 0,
+      totalPages: products.totalPages,
+      nextPage: products.nextPage,
+    },
     msg: "Filtered Products Fetched Successfully...",
+  });
+});
+
+const getAllBrands = asyncHandler(async (req, res) => {
+  const brands = await Product.distinct("brand");
+
+  res.status(200).json({
+    status: 200,
+    data: brands,
+    msg: "All brands fetched successfully",
+  });
+});
+
+const getProductCountByCategory = asyncHandler(async (req, res) => {
+  const response = await Product.aggregate([
+    {
+      $group: {
+        _id: "$category",
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "_id",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    {
+      $addFields: {
+        category: { $first: "$category.name" },
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 200,
+    data: response,
+    msg: "Product count by category fetched successfully",
+  });
+});
+
+const getTopSellingProduct = asyncHandler(async (req, res) => {
+  const [product] = await Order.aggregate([
+    {
+      $match: { isPaid: true },
+    },
+    { $unwind: "$orderItems" },
+    {
+      $group: {
+        _id: "$orderItems.product",
+        totalSold: { $sum: "$orderItems.qty" },
+      },
+    },
+    {
+      $sort: { totalSold: -1 },
+    },
+    { $limit: 1 },
+    {
+      $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "_id",
+        as: "product",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              brand: 1,
+              image: 1,
+              price: 1,
+              rating: 1,
+              numReviews: 1,
+            },
+          },
+        ],
+      },
+    },
+    { $addFields: { product: { $first: "$product" } } },
+  ]);
+
+  console.log(product);
+
+  res.status(200).json({
+    status: 200,
+    data: product,
+    msg: "Top Selling Product Fetched Successfully",
   });
 });
 
@@ -390,4 +516,7 @@ export const productController = {
   fetchTopProducts,
   fetchNewProducts,
   filterProducts,
+  getAllBrands,
+  getProductCountByCategory,
+  getTopSellingProduct,
 };

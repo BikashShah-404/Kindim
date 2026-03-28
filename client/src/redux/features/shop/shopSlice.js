@@ -2,11 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   categories: [],
-  products: [],
+  brands: [],
   checked: [],
   radio: [],
-  brandCheckboxes: {},
-  checkedBrands: [],
+  selectedBrands: [],
 };
 
 const shopSlice = createSlice({
@@ -16,9 +15,8 @@ const shopSlice = createSlice({
     setCategories: (state, action) => {
       state.categories = action.payload;
     },
-
-    setProducts: (state, action) => {
-      state.products = action.payload;
+    setBrands: (state, action) => {
+      state.brands = action.payload;
     },
     setChecked: (state, action) => {
       state.checked = action.payload;
@@ -26,18 +24,18 @@ const shopSlice = createSlice({
     setRadio: (state, action) => {
       state.radio = action.payload;
     },
-    setSelectedBrand: (state, action) => {
-      state.selectedBrand = action.payload;
+    setSelectedBrands: (state, action) => {
+      state.selectedBrands = action.payload;
     },
   },
 });
 
 export const {
   setCategories,
-  setProducts,
+  setBrands,
   setChecked,
   setRadio,
-  setSelectedBrand,
+  setSelectedBrands,
 } = shopSlice.actions;
 
 export default shopSlice.reducer;

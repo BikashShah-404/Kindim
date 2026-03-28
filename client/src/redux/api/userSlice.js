@@ -22,6 +22,7 @@ export const userSlice = apiSlice.injectEndpoints({
 
     logout: builder.mutation({
       query: () => ({ url: `${USERS_URL}/logout`, method: "POST" }),
+      invalidatesTags: ["User"],
     }),
 
     updateProfilePic: builder.mutation({
@@ -77,11 +78,13 @@ export const userSlice = apiSlice.injectEndpoints({
         url: `${USERS_URL}/check-isadmin`,
         method: "GET",
       }),
+      providesTags: ["User"],
+      keepUnusedDataFor: 0,
     }),
 
     getUsers: builder.query({
-      query: () => ({
-        url: `${USERS_URL}/get-all-users`,
+      query: ({ page, limit }) => ({
+        url: `${USERS_URL}/get-all-users?page=${page}&limit=${limit}`,
         method: "GET",
       }),
       providesTags: ["User"],
@@ -111,6 +114,13 @@ export const userSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+
+    refresh: builder.mutation({
+      query: () => ({
+        url: `${USERS_URL}/refresh`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -129,4 +139,5 @@ export const {
   useDeleteUserMutation,
   useGetUserDetailsQuery,
   useUpdateUserDetailsMutation,
+  useRefreshMutation,
 } = userSlice;

@@ -7,12 +7,19 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useEffect } from "react";
 
 const PaginationComp = ({ page, limit, setPage, setLimit, total }) => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page, limit]);
   return (
     <div className="w-full flex flex-col-reverse sm:flex-row  sm:space-y-0    items-center justify-center sm:space-x-20">
       <div className="flex  space-x-4 items-center h-full my-10 sm:my-0  p-2 ">
-        <label htmlFor="limit" className="text-xl font-semibold text-white">
+        <label
+          htmlFor="limit"
+          className="text-xl font-semibold text-white font-alegreya "
+        >
           Show :{" "}
         </label>
         <div>

@@ -48,10 +48,11 @@ const Header = () => {
         dispatch(resetCart());
         toast("See u soon...");
         dispatch(logout());
+        navigate("/", { replace: true });
       }
     } catch (error) {
+      dispatch(resetCart());
       console.log(error);
-      toast.error(error.data.message || "Something went wrong...");
     }
   };
 
@@ -63,14 +64,17 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full  h-16 rounded-b-md shadow-2xl pl-8 pr-2 flex items-center sticky z-10 top-0 bg-white">
+    <header className="w-full  h-16 rounded-b-md shadow-2xl pl-8 pr-2 flex items-center sticky  z-10 top-0 bg-white">
       <Link to="/" className="h-full w-fit">
-        <div className="h-full flex items-center justify-center w-fit ">
+        <div className="h-full flex items-center justify-center w-fit  ">
           <img src={Logo} alt="logo.png" width={40} />
           <RiShoppingBag4Fill
             size={20}
             className="relative bottom-1 right-3 "
           />
+          <span className="font-berkshireswash relative -bottom-2 right-6">
+            indim
+          </span>
         </div>
       </Link>
       <div className=" flex flex-1  justify-center items-center">
@@ -78,11 +82,11 @@ const Header = () => {
           <input
             type="text"
             placeholder="Search your buy..."
-            className=" flex-1 hidden md:block md:min-w-96 rounded-lg py-2 placeholder:text-center border-2 border-gray-200 outline-0 pl-4 pr-10 transition-all duration-100 focus-within:shadow-xl"
+            className=" flex-1 hidden md:block md:min-w-96 rounded-lg py-2 placeholder:text-center border-2 border-gray-200 outline-0 pl-4 pr-10 transition-all duration-100 focus-within:shadow-xl "
             ref={searchTermRef}
           />
           <div
-            className="relative right-9 bg-black  flex items-center justify-center w-10 rounded-2xl "
+            className="relative right-9 bg-black cursor-pointer  flex items-center justify-center w-10 rounded-2xl "
             onClick={handleSearchProduct}
           >
             <RiSearchLine className="" size={22} color="white" />
@@ -93,7 +97,7 @@ const Header = () => {
         <AnimatePresence>
           {!isMenuClicked && (
             <motion.div
-              className=" lg:hidden shadow-2xl cursor-pointer w-fit h-fit pr-2"
+              className=" lg:hidden shadow-2xl cursor-pointer w-fit h-fit pr-2 "
               whileHover={{ scale: 1.2 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
               initial={{ opacity: 0 }}
@@ -119,7 +123,7 @@ const Header = () => {
         <AnimatePresence>
           {isMenuClicked && (
             <motion.div
-              className="bg-gradient-to-t from-black via-gray-600 to-gray-500  p-2 absolute right-3 rounded-lg flex items-center justify-center lg:hidden "
+              className="bg-gradient-to-t  from-black via-gray-600 to-gray-500  p-2 absolute right-3 rounded-lg flex items-center justify-center lg:hidden "
               transition={{ duration: 0.4, ease: "easeInOut" }}
               initial={{ opacity: 0, scale: 0, x: 100 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -146,7 +150,11 @@ const Header = () => {
                   to={"/shop"}
                 >
                   <div className="flex space-x-2 items-center justify-center">
-                    <ToolTipComp Icon={<FaShop size={20} />} Text="Shop" />
+                    <ToolTipComp
+                      Icon={<FaShop size={20} c />}
+                      Text="Shop"
+                      className={"cursor-pointer"}
+                    />
                     <span className="text-white">Shop</span>
                   </div>
                 </Link>
@@ -174,11 +182,11 @@ const Header = () => {
                   className="relative cursor-pointer hover:bg-white/20 py-1 rounded-xl  w-full text-center"
                   to={"/cart"}
                 >
-                  <div className="flex space-x-2 items-center justify-center">
+                  <div className="flex space-x-2 items-center justify-center ">
                     <ToolTipComp
                       Icon={
-                        <div className="relative">
-                          <FaShoppingCart size={20} />
+                        <div className="relative ">
+                          <FaShoppingCart size={20} className="" />
                           {userInfo && (
                             <div className="absolute -right-4 -top-4">
                               {cartItems.length > 0 && (
@@ -191,6 +199,7 @@ const Header = () => {
                         </div>
                       }
                       Text="Cart"
+                      className={" cursor-pointer "}
                     />
                     <span className="text-white">Cart</span>
                   </div>
@@ -199,7 +208,7 @@ const Header = () => {
                   to={"/profile"}
                   className="cursor-pointer hover:bg-white/20 py-1 rounded-xl  w-full text-center"
                 >
-                  {userInfo ? (
+                  {userInfo?.profilePic ? (
                     <div className="flex space-x-2 items-center justify-center">
                       <div className="w-10 h-10 rounded-full overflow-hidden">
                         <img
@@ -212,7 +221,11 @@ const Header = () => {
                     </div>
                   ) : (
                     <div className="flex space-x-2 items-center justify-center">
-                      <ToolTipComp Icon={<FaUser size={20} />} Text="Profile" />
+                      <ToolTipComp
+                        Icon={<FaUser size={20} className="" />}
+                        Text="Profile"
+                        className={"cursor-pointer"}
+                      />
                       <span className="text-white">Profile</span>
                     </div>
                   )}
@@ -224,7 +237,7 @@ const Header = () => {
                     state={{ redirect: location.pathname }}
                     className="w-full text-center hover:bg-white/20 py-1 rounded-xl  "
                   >
-                    <div className="flex space-x-2 items-center justify-center">
+                    <div className="flex space-x-2 items-center justify-center ">
                       <ToolTipComp
                         Icon={<IoMdLogIn size={20} />}
                         Text="Login"
@@ -234,12 +247,14 @@ const Header = () => {
                     </div>
                   </Link>
                 ) : (
-                  <div className="flex space-x-2 items-center justify-center">
+                  <div
+                    className="w-full text-center hover:bg-white/20 py-1 rounded-xl flex space-x-2  items-center justify-center cursor-pointer"
+                    onClick={() => logoutHandler()}
+                  >
                     <ToolTipComp
                       Icon={<IoMdLogOut size={20} />}
                       Text="Logout"
                       className={"cursor-pointer"}
-                      onClick={() => logoutHandler()}
                     />
                     <span className="text-white">Logout</span>
                   </div>
@@ -285,7 +300,7 @@ const Header = () => {
                 </div>
               }
               Text="Cart"
-              className={"bg-red-900"}
+              className={"bg-red-900 cursor-pointer"}
             />
           </Link>
           <Link to={"/profile"} className=" cursor-pointer ">

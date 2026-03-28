@@ -43,9 +43,9 @@ const Cart = () => {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-screen ">
+    <div className="flex flex-col w-full min-h-screen  ">
       {cartItems.length === 0 ? (
-        <div className="flex flex-col space-y-10 flex-1 items-center justify-center text-3xl font-semibold">
+        <div className="flex flex-col space-y-10 flex-1 items-center justify-center text-3xl font-semibold  bg-gradient-to-tr from-black via-gray-600 to-gray-500">
           <p>Looks Lonely Here...</p>
           <Link to={"/shop"}>
             <button className="bg-gradient-to-br from-black via-gray-700 to-gray-600  px-6 py-2 rounded-lg text-white text-xl hover:bg-gradient-to-tl cursor-pointer">
@@ -54,7 +54,7 @@ const Cart = () => {
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col p-4 md:p-10 space-y-10 bg-gradient-to-l from-black via-gray-700 to-gray-600">
+        <div className="flex flex-col p-4 md:p-10 space-y-10 bg-gradient-to-br from-black via-gray-700 to-gray-600">
           <div className="text-2xl font-semibold mt-2  ml-4 text-white">
             Shopping Cart
           </div>
@@ -62,9 +62,9 @@ const Cart = () => {
             {cartItems.map((cartItem) => (
               <div
                 key={cartItem._id}
-                className=" flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 bg-white/10 p-4 rounded-xl text-white lg:min-w-4xl "
+                className=" flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 bg-black/50 p-4 rounded-xl text-white lg:min-w-4xl "
               >
-                <div className="w-full md:w-[10rem] h-[10rem]">
+                <div className="w-full md:w-[15rem] h-[15rem]">
                   <img
                     src={cartItem.image}
                     alt={cartItem.name}
@@ -75,13 +75,13 @@ const Cart = () => {
                   <div className="flex flex-1 justify-between space-x-6">
                     <div className="flex flex-col space-y-1">
                       <Link
-                        className="underline underline-offset-2 "
+                        className="underline underline-offset-2 font-semibold text-lg "
                         to={`/product/${cartItem._id}`}
                       >
                         {cartItem.name}
                       </Link>
                       <div>{cartItem.brand}</div>
-                      <div className="mt-2 text-xl text-green-400 font-semibold">
+                      <div className="mt-2 text-2xl text-green-400 font-semibold">
                         ${cartItem.price}
                       </div>
                     </div>
@@ -128,12 +128,12 @@ const Cart = () => {
             ))}
           </div>
           <div className="w-full flex justify-center">
-            <div className="mt-8  flex flex-col w-full  lg:w-[80%]  text-white space-y-8 bg-white/10 p-4 rounded-lg ">
+            <div className="mt-8  flex flex-col w-full  lg:w-[80%]  text-white space-y-8 bg-black/60 p-4 rounded-lg ">
               <p className="text-xl font-semibold mt-6 ml-6">Total : </p>
               <div className="flex flex-col space-y-6 w-full items-center">
                 {cartItems.map((cartItem) => (
                   <div
-                    className="flex bg-black px-4 py-3 rounded-xl justify-between items-center w-[90%] lg:w-[70%]"
+                    className="flex bg-black/40 p-6  rounded-xl justify-between items-center w-[90%] lg:w-[70%]"
                     key={cartItem._id}
                   >
                     <div className="flex flex-col">
@@ -164,7 +164,7 @@ const Cart = () => {
                   type="button"
                   onClick={checkOutHandler}
                 >
-                  <span>Proceed To Checkout</span>
+                  <span>Place Order</span>
                   <FaPaperPlane />
                 </button>
               </div>

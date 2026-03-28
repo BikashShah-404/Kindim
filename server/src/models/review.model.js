@@ -8,7 +8,7 @@ const reviewSchema = new mongoose.Schema(
       required: true,
       ref: "Product",
     },
-    rating: { type: Number, required: true },
+    rating: { type: Number, required: true, min: 1, max: 5 },
     review: { type: String, required: true },
     reviewBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -16,7 +16,7 @@ const reviewSchema = new mongoose.Schema(
       ref: "User",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 reviewSchema.index({ product: 1, reviewBy: 1 }, { unique: true });

@@ -2,7 +2,7 @@ import Input from "@/components/Input";
 import ToolTip from "@/components/Tooltip";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaEye, FaFileUpload, FaUser } from "react-icons/fa";
+import { FaEye, FaFileUpload, FaPaperPlane, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -40,6 +40,8 @@ import { MdDashboard } from "react-icons/md";
 
 import { motion, scale } from "motion/react";
 import AdminMenu from "../admin/AdminMenu";
+import AppReviewForm from "@/components/AppReviewForm";
+import { useGetMyAppReviewQuery } from "@/redux/api/reviewSlice";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -84,7 +86,7 @@ const Profile = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [preview, setPreview] = useState(null);
-  const { data, isLoading, error } = useCheckIfAdminQuery();
+  const { data, isLoading, isError, error } = useCheckIfAdminQuery();
   console.log(data);
 
   const profilePicRef = useRef(null);
@@ -131,6 +133,10 @@ const Profile = () => {
   const [updateProfilePic] = useUpdateProfilePicMutation();
   const [updateProfile] = useUpdateProfileMutation();
   const [changePassword] = useChangePasswordMutation();
+
+  const [isAppReviewClicked, setIsAppReviewClicked] = useState(false);
+  const { data: appReviewOfUser, isLoading: isMyAppReviewLoading } =
+    useGetMyAppReviewQuery();
 
   const handleProfileUpdate = async (data) => {
     try {
@@ -212,7 +218,9 @@ const Profile = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.data.message || "Something went wrong...");
+      if (error.status !== 401) {
+        toast.error(error.data.message || "Something went wrong...");
+      }
     }
   };
 
@@ -228,26 +236,26 @@ const Profile = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.data.message || "Something went wrong...");
+      if (error.status !== 401) {
+        toast.error(error.data.message || "Something went wrong...");
+      }
     }
   };
 
   return (
-    <div className="w-full h-[calc(100vh-64px)] flex flex-col p-10 items-center overflow-y-auto ">
-      <div className="w-60 min-h-60 rounded-3xl overflow-hidden mt-10 relative">
-        <img
-          src={
-            preview ? (
-              preview
-            ) : userInfo?.profilePic ? (
-              userInfo.profilePic
-            ) : (
-              <FaUser size={150} />
-            )
-          }
-          alt="profilePic.png"
-          className="object-cover w-full h-full"
-        />
+    <div className="w-full h-[calc(100vh-64px)] flex flex-col p-10 items-center overflow-y-auto bg-gradient-to-br from-black via-gray-700 to-gray-800 text-secondary ">
+      <div className="w-60 min-h-60 rounded-3xl overflow-hidden mt-10 relative flex justify-center items-center ">
+        {preview || userInfo?.profilePic ? (
+          <img
+            src={
+              preview ? preview : userInfo?.profilePic && userInfo.profilePic
+            }
+            alt="profilePic.png"
+            className="object-cover w-full h-full"
+          />
+        ) : (
+          <FaUser size={150} />
+        )}
         <div
           role="button"
           onMouseDown={(e) => e.preventDefault()}
@@ -323,6 +331,7 @@ const Profile = () => {
                 Icon={<CiEdit size={20} />}
                 Text={"Edit Username"}
                 type={"button"}
+                className={"text-black"}
               />
             </div>
           </div>
@@ -343,6 +352,7 @@ const Profile = () => {
                 Icon={<CiEdit size={20} />}
                 Text={"Edit Username"}
                 type={"button"}
+                className={"text-black"}
               />
             </div>
           </div>
@@ -372,9 +382,13 @@ const Profile = () => {
           <div className="absolute inset-0 flex flex-col md:flex-row justify-center items-center  backdrop-brightness-50">
             <form
               onSubmit={handlePasswordSubmit(handlePasswordChange)}
-              className="md:w-2/3 lg:w-2/5 w-[95%] shadow-2xl max-w-3xl"
+              className="md:w-2/3 lg:w-2/5 w-[95%] shadow-2xl max-w-3xl "
             >
-              <Card>
+              <Card
+                className={
+                  "bg-linear-to-r text-secondary  from-black via-gray-800 to-gray-900"
+                }
+              >
                 <CardHeader>
                   <CardTitle>Change Password</CardTitle>
                   <CardDescription>
@@ -386,6 +400,7 @@ const Profile = () => {
                       Text={"Cancel"}
                       onClick={() => setIsPasswordChangeClicked(false)}
                       type={"button"}
+                      className={"text-black"}
                     />
                   </CardAction>
                 </CardHeader>
@@ -448,6 +463,37 @@ const Profile = () => {
           </div>
         )}
       </div>
+
+      <div className="flex  flex-1 items-end gap-x-2 font-alegreya text-lg font-semibold w-full justify-center">
+        <div className="flex flex-col md:flex-row gap-x-2 items-center justify-center w-full">
+          <span>How was your Kindim experience?</span>
+          {appReviewOfUser?.data ? (
+            <button
+              className={`bg-gradient-to-r from-black via-gray-700 to-gray-600 px-10 py-1.5 text-white rounded-md cursor-pointer  w-fit  `}
+              type="button"
+              onClick={() => setIsAppReviewClicked(true)}
+            >
+              <span>Update Review</span>
+            </button>
+          ) : (
+            <button
+              className={`bg-gradient-to-r from-black via-gray-700 to-gray-600 px-10 py-1.5 text-white rounded-md cursor-pointer  w-fit  `}
+              type="button"
+              onClick={() => setIsAppReviewClicked(true)}
+            >
+              <span>Leave a Review.</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {isAppReviewClicked && userInfo && !isMyAppReviewLoading && (
+        <AppReviewForm
+          toogle={setIsAppReviewClicked}
+          appReviewOfUser={appReviewOfUser?.data || null}
+        />
+      )}
+
       <Link to="/orders">
         <motion.div
           className=" fixed right-1 bottom-1 sm:right-5 sm:bottom-5 md:right-10 md:bottom-10 z-10 shadow-2xl cursor-pointer w-fit h-fit "
@@ -470,7 +516,7 @@ const Profile = () => {
           </TooltipProvider>
         </motion.div>
       </Link>
-      {data?.status === 200 && <AdminMenu />}
+      {userInfo && data?.status === 200 && <AdminMenu />}
     </div>
   );
 };

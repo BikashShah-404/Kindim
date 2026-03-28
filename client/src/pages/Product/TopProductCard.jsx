@@ -11,8 +11,8 @@ import { Link } from "react-router-dom";
 
 const TopProductCard = ({ product }) => {
   return (
-    <div className=" flex flex-col max-w-md p-3 pr-5 bg-black/91 rounded-lg text-white space-y-4 relative hover:shadow-2xl ">
-      <div className="w-full h-60 overflow-hidden rounded-xl mt-4">
+    <div className=" flex flex-col max-w-md p-3 pr-4 bg-black/90 rounded-lg text-white space-y-4 relative hover:shadow-2xl  font-alegreya text-lg ">
+      <div className="w-full h-50 sm:h-72  overflow-hidden rounded-xl mt-4">
         <img
           src={product.image}
           alt={`$product.name}.png`}

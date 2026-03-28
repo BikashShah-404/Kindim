@@ -15,9 +15,19 @@ import { FaSave } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
+import { Spinner } from "@/components/ui/spinner";
+import PaginationComp from "@/components/Pagination";
 
 const UserList = () => {
-  const { data: users, refetch, isLoading, error } = useGetUsersQuery();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const {
+    data: users,
+    refetch,
+    isLoading,
+    error,
+  } = useGetUsersQuery({ page, limit });
   console.log(users);
 
   const {
@@ -81,28 +91,31 @@ const UserList = () => {
   }, [editableUser, reset]);
 
   return (
-    <div className="mt-10 px-4  ">
+    <div className=" px-4 py-10 flex justify-center bg-gradient-to-tr text-secondary min-h-screen from-black via-gray-600 to-gray-500 ">
       {isLoading ? (
-        <p>Loading...</p>
+        <div className="flex items-center gap-x-4 h-fit mt-96 shadow-2xl w-fit bg-gradient-to-tl from-black via-gray-600 to-gray-500 py-2 px-6 rounded-2xl  ">
+          <Spinner className={"h-10 w-10 "} />
+          <span className="text-secondary font-semibold">Fetching Users</span>
+        </div>
       ) : (
-        <>
-          <h1 className="font-bold text-xl">User Information:</h1>
+        <div className="flex flex-col w-full px-4">
+          <h1 className="font-bold text-xl  ">User Information:</h1>
           <div className="min-w-full flex flex-col md:flex-row mt-10 shadow-2xl  shadow-accent-foreground py-4 rounded-xl overflow-auto">
             {<AdminMenu />}
             <form className="w-full" onSubmit={handleSubmit(handleUserUpdate)}>
               <table className="min-w-full md:w-4/5 mx-auto overflow-x-auto">
                 <thead>
                   <tr>
-                    <th className="px-4 py-2 text-left">ID</th>
-                    <th className="px-4 py-2 text-left">UserName</th>
-                    <th className="px-4 py-2 text-left">Email</th>
-                    <th className="px-4 py-2 text-left">Admin</th>
-                    <th className="px-4 py-2 text-left">Actions</th>
+                    <th className="px-4 py-2 text-left underline">ID</th>
+                    <th className="px-4 py-2 text-left underline">UserName</th>
+                    <th className="px-4 py-2 text-left underline">Email</th>
+                    <th className="px-4 py-2 text-left underline">Admin</th>
+                    <th className="px-4 py-2 text-left underline">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {users?.data.map((user) => (
-                    <tr key={user._id}>
+                  {users?.data?.users.map((user) => (
+                    <tr key={user._id} className="border-b border-b-black">
                       <td className="px-4 py-2">{user._id}</td>
                       {editableUser?._id === user._id ? (
                         <>
@@ -114,7 +127,7 @@ const UserList = () => {
                                 className="px-2 py-1 rounded-md bg-gray-800 text-white text-center"
                                 {...register(
                                   "username",
-                                  "Username is required"
+                                  "Username is required",
                                 )}
                               />
                             </div>
@@ -220,7 +233,16 @@ const UserList = () => {
               </table>
             </form>
           </div>
-        </>
+          <div className="my-20 text-primary">
+            <PaginationComp
+              page={page}
+              limit={limit}
+              setPage={setPage}
+              setLimit={setLimit}
+              total={users?.data?.totalPages}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

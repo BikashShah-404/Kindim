@@ -1,5 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: gray;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(65, 64, 64);
+  border-radius: 1000px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@font-face {
+  font-family: "Berkshireswash";
+  src: url("./assets/fonts/berkshireswash-regular.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@theme {
+  --font-berkshireswash: "Berkshireswash", serif;
+  --font-alegreya: "Alegreya", serif;
+  --font-montserrat: "Montserrat", serif;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -64,11 +97,11 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --chart-1: oklch(45.353% 0.2278 311.367);
+  --chart-2: oklch(67.036% 0.22495 142.831);
+  --chart-3: oklch(55.362% 0.24454 332.76);
+  --chart-4: oklch(77.364% 0.129 191.061);
+  --chart-5: oklch(0% 0 0);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);

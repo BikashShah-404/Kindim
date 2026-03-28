@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
-  : { cartItems: [], shippingAddress: {}, paymentMethod: "PayPal" };
+  : { cartItems: [], shippingAddress: {}, paymentMethod: "esewa" };
 
 const cartSlice = createSlice({
   name: "cart",
@@ -48,11 +48,12 @@ const cartSlice = createSlice({
 
     clearCart: (state) => {
       state.cartItems = [];
-      localStorage.setItem("cart", state);
+      localStorage.setItem("cart", JSON.stringify(state));
     },
 
     resetCart: (state) => {
-      return initialState;
+      localStorage.removeItem("cart");
+      return { cartItems: [], shippingAddress: {}, paymentMethod: "esewa" };
     },
   },
 });

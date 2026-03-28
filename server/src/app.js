@@ -8,7 +8,7 @@ app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json({ limit: "20kb" }));
@@ -23,6 +23,12 @@ app.use("/", indexRouter);
 app.use((err, req, res, next) => {
   console.log(err.stack);
   err.message = err ? err.toString() : "Something went wrong";
+
+  if (err.name === "TokenExpiredError") {
+    res
+      .status(401)
+      .json({ status: "error", statusCode: 401, message: err.message });
+  }
   res
     .status(500)
     .json({ status: "error", statusCode: 500, message: err.message });

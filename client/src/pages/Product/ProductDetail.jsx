@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -29,6 +29,7 @@ const ProductDetail = () => {
   const { id: productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [qty, setQty] = useState(1);
   const [isReviewProductClicked, setIsReviewProductClicked] = useState(false);
@@ -49,6 +50,7 @@ const ProductDetail = () => {
   const handleisReviewProductClicked = () => {
     if (!userInfo) {
       toast.info("Please Log in to post/update review...");
+      navigate("/login", { state: { redirect: location.pathname } });
       return;
     }
     setIsReviewProductClicked(true);
@@ -57,6 +59,7 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (!userInfo) {
       toast.info("Please Log in to add to cart...");
+      navigate("/login", { state: { redirect: location.pathname } });
       return;
     }
     const result = dispatch(addToCart({ ...product, qty }));
@@ -66,6 +69,7 @@ const ProductDetail = () => {
       toast.success("Item added to Cart");
     }
   };
+  console.log(product);
 
   return isLoading ? (
     <></>
@@ -244,12 +248,13 @@ const ProductDetail = () => {
                         </div>
                       </div>
                     ))}
-                  <Link
+                  <button
                     className="bg-gradient-to-l from-black via-gray-700 to-gray-600 px-14 py-2 text-white rounded-md cursor-pointer"
-                    to={`/product-review/${productId}`}
+                    onClick={() => navigate(`/product-review/${productId}`)}
+                    // disabled={product.numReviews === 0}
                   >
-                    All {product.numReviews} reviews
-                  </Link>
+                    All {product?.numReviews} reviews
+                  </button>
                 </div>
               </div>
             </div>

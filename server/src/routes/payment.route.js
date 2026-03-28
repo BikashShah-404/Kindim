@@ -6,4 +6,5 @@ const router = Router();
 
 router.route("/initiate").post(verifyJWT, paymentController.initiatePayment);
 router.route("/complete").get(verifyJWT, paymentController.completePayment);
+router.route("/failure").get(verifyJWT, paymentController.failedPayment);
 export default router;

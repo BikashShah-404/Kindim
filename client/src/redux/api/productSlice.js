@@ -16,6 +16,7 @@ const productSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags: ["Product"],
     }),
+
     getProductById: builder.query({
       query: (productId) => ({
         url: `${PRODUCT_URL}/${productId}`,
@@ -25,13 +26,15 @@ const productSlice = apiSlice.injectEndpoints({
         { type: "Product", id: productId },
       ],
     }),
+
     getAllProducts: builder.query({
-      query: () => ({
-        url: `${PRODUCT_URL}/allproducts`,
+      query: ({ page, limit }) => ({
+        url: `${PRODUCT_URL}/allproducts?page=${page}&limit=${limit}`,
         method: "GET",
       }),
       providesTags: ["Product"],
     }),
+
     getTopProduct: builder.query({
       query: () => ({
         url: `${PRODUCT_URL}/top`,
@@ -39,6 +42,7 @@ const productSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+
     getNewProduct: builder.query({
       query: () => ({
         url: `${PRODUCT_URL}/new`,
@@ -46,6 +50,7 @@ const productSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+
     createProduct: builder.mutation({
       query: (data) => ({
         url: `${PRODUCT_URL}/create`,
@@ -54,6 +59,7 @@ const productSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
+
     updateProductDetails: builder.mutation({
       query: ({ productId, data }) => ({
         url: `${PRODUCT_URL}/update-details/${productId}`,
@@ -62,6 +68,7 @@ const productSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
+
     updateProductImage: builder.mutation({
       query: ({ productId, image }) => ({
         url: `${PRODUCT_URL}/update-image/${productId}`,
@@ -70,6 +77,7 @@ const productSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
+
     deleteProduct: builder.mutation({
       query: (productId) => ({
         url: `${PRODUCT_URL}/delete/${productId}`,
@@ -77,11 +85,33 @@ const productSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
+
     getFilterProducts: builder.query({
-      query: ({ checked, radio, keyword }) => ({
-        url: `${PRODUCT_URL}/filter-products`,
+      query: ({ checked, selectedBrands, radio, keyword, page, limit }) => ({
+        url: `${PRODUCT_URL}/filter-products?page=${page}&limit=${limit}`,
         method: "POST",
-        body: { checked, radio, keyword },
+        body: { checked, brands: selectedBrands, radio, keyword },
+      }),
+    }),
+
+    getAllBrands: builder.query({
+      query: () => ({
+        url: `${PRODUCT_URL}/brands`,
+        method: "GET",
+      }),
+    }),
+
+    getProductCountInCategory: builder.query({
+      query: () => ({
+        url: `${PRODUCT_URL}/category/product-count`,
+        method: "GET",
+      }),
+    }),
+
+    getTopSellingProduct: builder.query({
+      query: () => ({
+        url: `${PRODUCT_URL}/top-product`,
+        method: "GET",
       }),
     }),
   }),
@@ -98,4 +128,7 @@ export const {
   useUpdateProductImageMutation,
   useDeleteProductMutation,
   useGetFilterProductsQuery,
+  useGetAllBrandsQuery,
+  useGetProductCountInCategoryQuery,
+  useGetTopSellingProductQuery,
 } = productSlice;

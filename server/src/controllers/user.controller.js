@@ -1,3 +1,4 @@
+import { Subscription } from "../models/subscribtion.model.js";
 import { User } from "../models/user.model.js";
 import { mailer } from "../services/mailer.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -70,26 +71,45 @@ const login = asyncHandler(async (req, res) => {
   if (!isPasswordCorrect) throw new Error("Password and Email didn't match");
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
-    user._id
+    user._id,
   );
 
   const loggedInUser = await User.findById(user._id).select(
-    "-password -refreshToken -forgetPasswordToken -forgetPasswordTokenExpires -isAdmin"
+    "-password -refreshToken -forgetPasswordToken -forgetPasswordTokenExpires -isAdmin",
   );
 
-  const options = {
+  const accessTokenOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",
     sameSite: "strict",
+    maxAge: 60 * 60 * 1000,
   };
+
+  const refreshTokenOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "strict",
+    maxAge: 10 * 24 * 60 * 60 * 1000,
+  };
+
+  const subscribtion = await Subscription.findOne({
+    email: loggedInUser.email,
+  });
+  console.log(subscribtion);
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, accessTokenOptions)
+    .cookie("refreshToken", refreshToken, refreshTokenOptions)
     .json({
       status: 200,
-      data: loggedInUser,
+      data: {
+        _id: user.id,
+        username: user.username,
+        email: user.email,
+        profilePic: user.profilePic,
+        isSubscribed: subscribtion?.isSubscribed || false,
+      },
       msg: "User logged in successfully",
     });
 });
@@ -98,7 +118,7 @@ const logout = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user?._id,
     { $set: { refreshToken: null } },
-    { new: true }
+    { new: true },
   );
 
   const options = {
@@ -120,11 +140,11 @@ const refresh = asyncHandler(async (req, res) => {
 
   const decodedToken = await jwt.verify(
     refreshToken,
-    process.env.REFRESH_TOKEN_SECRET
+    process.env.REFRESH_TOKEN_SECRET,
   );
 
   const user = await User.findById(decodedToken._id).select(
-    "-password -forgetPasswordToken -forgetPasswordTokenExpires"
+    "-password -forgetPasswordToken -forgetPasswordTokenExpires",
   );
 
   if (!user || refreshToken !== user.refreshToken)
@@ -133,16 +153,28 @@ const refresh = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken: newRefreshToken } =
     await generateAccessAndRefreshToken(user?._id);
 
-  const options = {
+  const accessTokenOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",
     sameSite: "strict",
+    maxAge: 60 * 60 * 1000,
   };
+
+  const refreshTokenOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "strict",
+    maxAge: 10 * 24 * 60 * 60 * 1000,
+  };
+
+  const subscribtion = await Subscription.findOne({
+    email: user.email,
+  });
 
   res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", newRefreshToken, options)
+    .cookie("accessToken", accessToken, accessTokenOptions)
+    .cookie("refreshToken", newRefreshToken, refreshTokenOptions)
     .json({
       status: 200,
       data: {
@@ -150,6 +182,7 @@ const refresh = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         profilePic: user.profilePic,
+        isSubscribed: subscribtion?.isSubscribed || false,
       },
       msg: "User refreshed successfully",
     });
@@ -159,6 +192,10 @@ const getCurrentUser = await asyncHandler(async (req, res) => {
   const currentUser = await User.findById(req.user?._id);
   if (!currentUser) throw new Error("User not found");
 
+  const subscribtion = await Subscription.findOne({
+    email: currentUser.email,
+  });
+
   res.status(200).json({
     status: 200,
     data: {
@@ -166,6 +203,7 @@ const getCurrentUser = await asyncHandler(async (req, res) => {
       username: currentUser.currentUsername,
       email: currentUser.email,
       profilePic: currentUser.profilePic,
+      isSubscribed: subscribtion?.isSubscribed || false,
     },
     msg: "Current currentUser found successfully",
   });
@@ -183,7 +221,7 @@ const updateProfile = asyncHandler(async (req, res) => {
         email,
       },
     },
-    { new: true }
+    { new: true },
   );
 
   res.status(200).json({
@@ -223,7 +261,7 @@ const updateProfilePic = asyncHandler(async (req, res) => {
           profilePic: profilePic.url,
         },
       },
-      { new: true }
+      { new: true },
     );
 
     res.status(200).json({
@@ -268,7 +306,7 @@ const getForgetPasswordToken = asyncHandler(async (req, res) => {
   const isEmailSent = await mailer(
     email,
     "Account Recovery",
-    `Token : ${FPToken}`
+    `Token : ${FPToken}`,
   );
 
   if (!isEmailSent) throw new Error("Error while sending the email");
@@ -337,10 +375,21 @@ const checkIfAdmin = asyncHandler(async (req, res) => {
 
 // Admin-Only:
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({});
+  const { page = 1, limit = 10 } = req.query;
+  const users = await User.aggregatePaginate(User.aggregate([]), {
+    page: +page,
+    limit: +limit,
+  });
   res.status(200).json({
     status: 200,
-    data: users,
+    data: {
+      users: users.docs,
+      currentPage: +page,
+      limit: +limit,
+      totalDocs: users.totalDocs || 0,
+      totalPages: users.totalPages,
+      nextPage: users.nextPage,
+    },
     msg: "Got all the users",
   });
 });
@@ -364,7 +413,7 @@ const updateProfileById = asyncHandler(async (req, res) => {
   const { username, email, isAdmin } = req.body;
   if (!username && !email && !req.file)
     throw new Error(
-      "username or email or profilePic is required to update the user"
+      "username or email or profilePic is required to update the user",
     );
 
   const user = await User.findById(id);

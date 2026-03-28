@@ -5,6 +5,8 @@ import productRouter from "./product.route.js";
 import reviewRouter from "./review.route.js";
 import orderRouter from "./order.route.js";
 import paymentRouter from "./payment.route.js";
+import analyticsRouter from "./analytics.route.js";
+import subscribtionRouter from "./subscribtion.route.js";
 
 const apiIndex = "/api/v1";
 const router = Router();
@@ -21,5 +23,9 @@ router.use(`${apiIndex}/products`, productRouter);
 router.use(`${apiIndex}/orders`, orderRouter);
 // paymentRouter
 router.use(`${apiIndex}/payments`, paymentRouter);
+// analyticsRouter
+router.use(`${apiIndex}/analytics`, analyticsRouter);
+// subscribtionROuter
+router.use(`${apiIndex}/subscribtion`, subscribtionRouter);
 
 export default router;

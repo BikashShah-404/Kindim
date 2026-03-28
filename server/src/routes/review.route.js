@@ -13,13 +13,24 @@ router
   .get(verifyJWT, reviewController.getYourReviewForAProduct);
 
 router
-  .route("/product/:productId")
+  .route("/product/review/:productId")
   .get(reviewController.getProductReviews)
   .post(verifyJWT, reviewController.addReview);
 
 router
-  .route("/:reviewId")
+  .route("/product/:reviewId")
   .patch(verifyJWT, reviewController.updateReview)
   .delete(verifyJWT, reviewController.deleteReview);
+
+router
+  .route("/app")
+  .get(reviewController.getTopAppReviews)
+  .post(verifyJWT, reviewController.addAppReview);
+
+router.route("/app/my-review").get(verifyJWT, reviewController.getMyAppReview);
+
+router
+  .route("/app/:reviewId")
+  .patch(verifyJWT, reviewController.updateAppReview);
 
 export default router;

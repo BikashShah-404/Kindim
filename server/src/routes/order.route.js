@@ -13,19 +13,14 @@ router
   .route("/all")
   .get(verifyJWT, authorizedAdmin, orderController.getAllOrders);
 
-router
-  .route("/analytics")
-  .get(verifyJWT, authorizedAdmin, orderController.getOrdersAnalytics);
-
-router
-  .route("/analytics/sales-per-day")
-  .get(verifyJWT, authorizedAdmin, orderController.getSalesPerDay);
-
 router.route("/:_id").get(verifyJWT, orderController.getOrderById);
 
-router.route("/:_id/pay").put(verifyJWT, orderController.markOrderAsPaid);
 router
   .route("/:_id/deliver")
   .put(verifyJWT, authorizedAdmin, orderController.markOrderAsDelivered);
+
+router
+  .route("/:_id/pay")
+  .put(verifyJWT, authorizedAdmin, orderController.markOrderAsPaid);
 
 export default router;

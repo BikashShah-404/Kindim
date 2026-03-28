@@ -112,7 +112,7 @@ const AdminMenu = () => {
                 </motion.div>
               </NavLink>
               <NavLink
-                to="/admin/user-list"
+                to="/admin/userlist"
                 className={({ isActive }) =>
                   `   ${
                     isActive ? "border-l-2 rounded-l-xs border-l-white" : " "
@@ -128,7 +128,7 @@ const AdminMenu = () => {
                 </motion.div>
               </NavLink>
               <NavLink
-                to="/admin/product/allproducts"
+                to="/admin/product-all"
                 className={({ isActive }) =>
                   `  ${
                     isActive ? "border-l-2 rounded-l-xs border-l-white" : " "

@@ -10,7 +10,11 @@ const TopProducts = () => {
 
   return (
     <div className="">
-      {data && <ScrollCarousel title="Top Products" topProducts={data.data} />}
+      {data ? (
+        <ScrollCarousel topProducts={data.data} />
+      ) : (
+        <div className="min-h-screen bg-gradient-to-br from-black via-gray-700 to-gray-600"></div>
+      )}
     </div>
   );
 };

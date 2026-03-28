@@ -9,14 +9,19 @@ import { Link } from "react-router-dom";
 const Favourites = () => {
   const favourites = useSelector(selectFavouriteProduct);
   return (
-    <div className="w-full h-screen p-10 flex flex-col ">
+    <div className="w-full h-screen p-10 flex flex-col bg-gradient-to-tr from-black via-gray-600 to-gray-500 text-secondary ">
       <div className=" text-2xl mt-8 font-semibold ">
         <p>Favourite Products:</p>
       </div>
       <div className=" flex flex-row flex-1 flex-wrap py-10 gap-11 justify-center">
         {favourites.length === 0 ? (
-          <div className="w-full flex items-center justify-center text-3xl">
+          <div className="w-full flex flex-col gap-y-4 items-center justify-center text-3xl">
             Looks Lonely Here...
+            <Link to={"/shop"}>
+              <button className="bg-gradient-to-br from-black via-gray-700 to-gray-600  px-6 py-2 rounded-lg text-white text-xl hover:bg-gradient-to-tl cursor-pointer">
+                Go Shopping
+              </button>
+            </Link>
           </div>
         ) : (
           <>

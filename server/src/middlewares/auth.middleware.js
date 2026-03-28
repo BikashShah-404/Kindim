@@ -7,12 +7,20 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     req.cookies.accessToken ||
     req.header("Authorization")?.replace("Bearer", "");
 
-  if (!token) throw new Error("Unauthorized Request");
+  console.log(token);
+
+  if (!token) {
+    res
+      .status(401)
+      .json({ status: 401, data: {}, msg: "Unauthorized Request" });
+    throw new Error("Unauthorized Request");
+  }
 
   const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  console.log(decodedToken);
 
   const user = await User.findById(decodedToken._id).select(
-    "-password -refreshToken -forgetPasswordToken -forgetPasswordTokenExpires"
+    "-password -refreshToken -forgetPasswordToken -forgetPasswordTokenExpires",
   );
 
   if (!user) throw new Error("Invalid Access Token");

@@ -60,44 +60,60 @@ const ForgotPassword = () => {
 
   const [getFPToken] = useGetFPTokenMutation();
   const handleEmailSubmit = async (data) => {
-    const response = await getFPToken(data).unwrap();
-    if (response.status === 200) {
-      toast.success("Please check your email for the recovery token");
-      setResetPasswordData({ ...resetPasswordData, email: data.email });
-      setIsEmailSent(true);
-      reset();
+    try {
+      const response = await getFPToken(data).unwrap();
+      if (response.status === 200) {
+        toast.success("Please check your email for the recovery token");
+        setResetPasswordData({ ...resetPasswordData, email: data.email });
+        setIsEmailSent(true);
+        reset();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.data.message || "An unknown error occurred");
     }
   };
 
-  const [sendFPToken] = useSendFPTokenMutation();
+  const [sendFPToken, { isError, error }] = useSendFPTokenMutation();
+
   const handleFPTokenSubmit = async (data) => {
-    const response = await sendFPToken({
-      ...resetPasswordData,
-      ...data,
-    }).unwrap();
-    if (response.status === 200) {
-      setResetPasswordData({ ...resetPasswordData, token: data.token });
-      setIsFPTokenVerified(true);
-      resetToken();
+    try {
+      const response = await sendFPToken({
+        ...resetPasswordData,
+        ...data,
+      }).unwrap();
+      if (response.status === 200) {
+        setResetPasswordData({ ...resetPasswordData, token: data.token });
+        setIsFPTokenVerified(true);
+        resetToken();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.data.message || "An unknown error occurred");
     }
   };
 
   const [resetPassword] = useResetPasswordMutation();
   const navigate = useNavigate();
   const handleResetPassword = async (data) => {
-    const response = await resetPassword({
-      ...resetPasswordData,
-      ...data,
-    }).unwrap();
-    if (response.status === 200) {
-      setIsFPTokenVerified(true);
-      toast.success("Password Reset Successful. Please Log in...");
-      navigate("/login");
+    try {
+      const response = await resetPassword({
+        ...resetPasswordData,
+        ...data,
+      }).unwrap();
+      if (response.status === 200) {
+        setIsFPTokenVerified(true);
+        toast.success("Password Reset Successful. Please Log in...");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.data.message || "An unknown error occurred");
     }
   };
 
   return (
-    <div className="absolute inset-0 flex flex-col md:flex-row justify-center items-center  backdrop-brightness-50">
+    <div className="fixed z-10 backdrop-blur-[2px] inset-0 flex flex-col md:flex-row justify-center items-center  bg-black/30">
       <AnimatePresence mode="wait">
         {!isEmailSent ? (
           <motion.div
@@ -109,7 +125,11 @@ const ForgotPassword = () => {
             transition={{ duration: 0.6 }}
           >
             <form onSubmit={handleSubmit(handleEmailSubmit)} className="w-full">
-              <Card>
+              <Card
+                className={
+                  "bg-gradient-to-l text-secondary  from-black via-gray-800 to-gray-900"
+                }
+              >
                 <CardHeader>
                   <CardTitle>Forgot Password</CardTitle>
                   <CardDescription>
@@ -121,6 +141,7 @@ const ForgotPassword = () => {
                         Icon={<MdCancel size={28} />}
                         Text={"Cancel"}
                         type={"button"}
+                        className={"text-primary"}
                       />
                     </Link>
                   </CardAction>
@@ -170,7 +191,11 @@ const ForgotPassword = () => {
               onSubmit={handleTokenSubmit(handleFPTokenSubmit)}
               className="w-full"
             >
-              <Card>
+              <Card
+                className={
+                  "bg-gradient-to-l text-secondary  from-black via-gray-800 to-gray-900"
+                }
+              >
                 <CardHeader>
                   <CardTitle>Forgot Password</CardTitle>
                   <CardDescription>Enter The Token</CardDescription>
@@ -180,6 +205,7 @@ const ForgotPassword = () => {
                       Text={"Go Back"}
                       type={"button"}
                       onClick={() => setIsEmailSent(false)}
+                      className={"text-primary"}
                     />
                   </CardAction>
                 </CardHeader>
@@ -228,7 +254,11 @@ const ForgotPassword = () => {
               onSubmit={handleNewPasswordSubmit(handleResetPassword)}
               className="w-full"
             >
-              <Card>
+              <Card
+                className={
+                  "bg-gradient-to-l text-secondary  from-black via-gray-800 to-gray-900"
+                }
+              >
                 <CardHeader>
                   <CardTitle>Forgot Password</CardTitle>
                   <CardDescription>Enter New Password</CardDescription>
@@ -238,6 +268,7 @@ const ForgotPassword = () => {
                       Text={"Go Back"}
                       type={"button"}
                       onClick={() => setIsFPTokenVerified(false)}
+                      className={"text-primary"}
                     />
                   </CardAction>
                 </CardHeader>

@@ -20,7 +20,7 @@ router
   .patch(
     verifyJWT,
     upload.single("profilePic"),
-    userController.updateProfilePic
+    userController.updateProfilePic,
   );
 
 router.route("/change-password").post(verifyJWT, userController.updatePassword);
@@ -47,7 +47,7 @@ router
     verifyJWT,
     authorizedAdmin,
     upload.single("profilePic"),
-    userController.updateProfileById
+    userController.updateProfileById,
   )
   .delete(verifyJWT, authorizedAdmin, userController.deleteAUserById);
 

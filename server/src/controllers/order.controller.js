@@ -133,44 +133,6 @@ const getAllOrders = asyncHandler(async (req, res) => {
   });
 });
 
-const getOrdersAnalytics = asyncHandler(async (req, res) => {
-  const orders = await Order.find({});
-
-  const totalSales = orders.reduce(
-    (acc, eachOrder) => acc + eachOrder.totalPrice,
-    0,
-  );
-  res.status(200).json({
-    status: 200,
-    data: {
-      totalOrders: orders.length,
-      totalSales,
-    },
-    msg: "Order Analytics Fetched Successfully",
-  });
-});
-
-const getSalesPerDay = asyncHandler(async (req, res) => {
-  const DBquery = [];
-  DBquery.push(
-    { $match: { isPaid: true } },
-    {
-      $group: {
-        _id: { $dateToString: { format: "%Y-%m-%d", date: "$paidAt" } },
-        totalSales: { $sum: "$totalPrice" },
-      },
-    },
-  );
-
-  const salesPerDay = await Order.aggregate(DBquery);
-
-  res.status(200).json({
-    status: 200,
-    data: salesPerDay,
-    msg: "Sales per day fetched successfully",
-  });
-});
-
 const getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params._id).populate(
     "user",
@@ -182,16 +144,6 @@ const getOrderById = asyncHandler(async (req, res) => {
     staus: 200,
     data: order,
     msg: "Order fetched successfully",
-  });
-});
-
-const markOrderAsPaid = asyncHandler(async (req, res) => {
-  
-
-  res.status(200).json({
-    status: 200,
-    data: updatedOrder,
-    msg: "Order marked as paid successfully",
   });
 });
 
@@ -214,15 +166,31 @@ const markOrderAsDelivered = asyncHandler(async (req, res) => {
   });
 });
 
+const markOrderAsPaid = asyncHandler(async (req, res) => {
+  const updatedOrder = await Order.findByIdAndUpdate(
+    req.params._id,
+    {
+      isPaid: true,
+      paidAt: Date.now(),
+    },
+    { new: true },
+  );
+  if (!updatedOrder) throw new Error("Error while updating the order to paid");
+
+  res.status(200).json({
+    status: 200,
+    data: updatedOrder,
+    msg: "Order marked as paid successfully",
+  });
+});
+
 export const orderController = {
   createOrder,
   getOwnOrders,
 
   // Admin Only :
   getAllOrders,
-  getOrdersAnalytics,
-  getSalesPerDay,
   getOrderById,
-  markOrderAsPaid,
   markOrderAsDelivered,
+  markOrderAsPaid,
 };

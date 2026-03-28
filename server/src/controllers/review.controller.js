@@ -3,6 +3,7 @@ import { Review } from "../models/review.model.js";
 
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { updateProfileRating } from "../utils/updateProfileRating.js";
+import { AppReview } from "../models/appReview.model.js";
 
 const getProductReviews = asyncHandler(async (req, res) => {
   const { productId } = req.params;
@@ -55,7 +56,6 @@ const getProductReviews = asyncHandler(async (req, res) => {
     page: +page,
     limit: +limit,
   });
-  if (!reviews) throw new Error("No Reviews Found...");
 
   res.status(200).json({
     status: 200,
@@ -132,7 +132,6 @@ const getYourReviewForAProduct = asyncHandler(async (req, res) => {
     product: productId,
     reviewBy: req.user._id,
   });
-  if (!review) throw new Error("No Review Found...");
 
   res
     .status(200)
@@ -211,6 +210,104 @@ const deleteReview = asyncHandler(async (req, res) => {
     .json({ data: { response }, msg: "Review deleted successfully" });
 });
 
+const getTopAppReviews = asyncHandler(async (req, res) => {
+  const topReviews = await AppReview.aggregate([
+    { $sort: { rating: -1 } },
+    { $limit: 10 },
+    {
+      $lookup: {
+        from: "users",
+        localField: "reviewBy",
+        foreignField: "_id",
+        as: "reviewBy",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              username: 1,
+              profilePic: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        reviewBy: { $first: "$reviewBy" },
+      },
+    },
+  ]);
+
+  console.log(topReviews);
+  res.status(200).json({
+    status: 200,
+    data: topReviews,
+    msg: "Top Reviews Fetched Successfully",
+  });
+});
+
+const getMyAppReview = asyncHandler(async (req, res) => {
+  const myAppReview = await AppReview.findOne({
+    reviewBy: req.user._id,
+  });
+
+  res.status(200).json({
+    status: 200,
+    data: myAppReview,
+    msg: "App-Review Fetched Successfully...",
+  });
+});
+
+const addAppReview = asyncHandler(async (req, res) => {
+  const { rating, review } = req.body;
+  if (!rating || !review) throw new Error("Review and Rating are required...");
+
+  if (rating > 5) throw new Erro("Rating cannot be more than 5...");
+
+  const alreadyReviewed = await AppReview.findOne({
+    reviewBy: req.user._id,
+  });
+  if (alreadyReviewed)
+    throw new Error("You have already reviewed this product");
+
+  const reviewDocument = await AppReview.create({
+    rating: +rating,
+    review,
+    reviewBy: req.user._id,
+  });
+  if (!reviewDocument) throw new Error("Error while generating appReview");
+
+  res.status(200).json({
+    status: 200,
+    data: reviewDocument,
+    msg: "AppReview Posted Successfully",
+  });
+});
+
+const updateAppReview = asyncHandler(async (req, res) => {
+  const { reviewId } = req.params;
+  const { rating, review } = req.body;
+  if (!rating && !review) throw new Error("Nothing to update...");
+
+  const reviewDocument = await AppReview.findByIdAndUpdate(
+    reviewId,
+    {
+      $set: {
+        rating: rating && +rating,
+        review,
+      },
+    },
+    { new: true },
+  );
+  if (!reviewDocument) throw new Error("Error while updating the review...");
+
+  res.status(200).json({
+    status: 200,
+    data: reviewDocument,
+    msg: "App Review Successfully Updated",
+  });
+});
+
 export const reviewController = {
   getProductReviews,
   getProductReviewsPerRating,
@@ -218,4 +315,8 @@ export const reviewController = {
   addReview,
   updateReview,
   deleteReview,
+  getTopAppReviews,
+  getMyAppReview,
+  addAppReview,
+  updateAppReview,
 };

@@ -22,6 +22,7 @@ import { IoIosEyeOff } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 
 import { easeIn, motion, scale } from "motion/react";
+import { resetCart } from "@/redux/features/cart/cartSlice";
 
 // motion-part:
 const steps = [{ title: "Step-1" }, { title: "Step-2" }];
@@ -90,7 +91,7 @@ const SignUp = () => {
       console.log(signupResponse.status === 200);
       if (signupResponse.status === 200) {
         toast.success(
-          `Welcome , ${signupResponse.data.username} , Logging you in...`
+          `Welcome , ${signupResponse.data.username} , Logging you in...`,
         );
         const loginResponse = await login({
           email: data.email,
@@ -98,9 +99,11 @@ const SignUp = () => {
         }).unwrap();
         setTimeout(() => {
           if (loginResponse.status === 200) {
+            dispatch(resetCart());
+            localStorage.setItem("previousUserId", loginResponse.data._id);
             dispatch(setCredentials(loginResponse.data));
             toast.success(
-              `Good to see u back , ${loginResponse.data.username}`
+              `Good to see u back , ${loginResponse.data.username}`,
             );
           }
         }, 1000);
@@ -113,7 +116,7 @@ const SignUp = () => {
 
   useEffect(() => {
     if (!redirect?.startsWith("/")) navigate("/");
-    if (userInfo) navigate(redirect);
+    if (userInfo) navigate(redirect, { replace: true });
   }, [redirect, userInfo, navigate]);
 
   // Not a design flaw, i wanna make a single button for hide and show the password and confirm password...
@@ -137,8 +140,8 @@ const SignUp = () => {
   };
 
   return (
-    <div className="absolute w-screen h-screen inset-0 backdrop-blur-xs flex items-center justify-center">
-      <div className="flex flex-col md:flex-row items-center justify-around  md:justify-around w-[90%] md:w-[95%] h-[90%] md:h-[80%]  max-w-6xl p-2 rounded-2xl shadow-2xl bg-accent overflow-y-scroll overflow-x-hidden sm:overflow-y-auto">
+    <div className="fixed  inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center z-10">
+      <div className="flex flex-col md:flex-row items-center justify-around  md:justify-around w-[90%] md:w-[95%] h-[90vh] md:h-[80vh]  max-w-6xl p-2  rounded-2xl shadow-2xl bg-accent overflow-y-scroll overflow-x-hidden sm:overflow-y-auto bg-gradient-to-br text-secondary from-black via-gray-600 to-gray-500 ">
         <div className="md:w-1/5 mt-6 md:mt-0 flex md:flex-col items-center justify-around relative  w-[20rem]  md:h-[20rem] ">
           {
             <>
@@ -377,8 +380,8 @@ const SignUp = () => {
                   {isSubmitting
                     ? "Registering..."
                     : preview
-                    ? "Upload & Signup"
-                    : "Skip & Signup"}
+                      ? "Upload & Signup"
+                      : "Skip & Signup"}
                 </button>
               )}
             </div>

@@ -21,6 +21,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ToolTip from "@/components/Tooltip";
+import AdminMenu from "./AdminMenu.jsx";
 
 const CategoryList = () => {
   const { data: categories, refetch } = useGetAllCategoriesQuery();
@@ -104,18 +105,19 @@ const CategoryList = () => {
   };
 
   return (
-    <div className=" p-6 flex flex-col space-y-8 ">
+    <div className=" p-6 flex flex-col space-y-8 bg-gradient-to-br from-black via-gray-700 to-gray-600 text-secondary min-h-[94vh]">
       <h1 className="text-xl font-semibold">Manage Categories</h1>
+      <AdminMenu />
       <form
         onSubmit={handleNewCategoryCreation(handleCategoryCreation)}
-        className="flex flex-col space-y-6 bg-white shadow-xl p-6 rounded-xl shadow-black/20"
+        className="flex flex-col space-y-6 bg-accent-foreground shadow-xl p-6 rounded-xl shadow-black/20 "
       >
         <div className="flex flex-col -space-y-3 w-full md:w-2/3 lg:w-1/2 ">
           <Input
             label="Category Name :"
             name="name"
             type="text"
-            className=""
+            className="text-secondary "
             {...registerCategory("name", {
               required: "Category-Name is Required...",
             })}
@@ -137,9 +139,11 @@ const CategoryList = () => {
         </button>
       </form>
       <hr />
-      <div className="flex flex-col space-y-6 bg-white shadow-xl p-10 rounded-xl  ">
-        <span className="text-lg font-medium ">Category-List :</span>
-        <div className="flex flex-col gap-y-6  sm:flex-row sm:space-x-6">
+      <div className="flex flex-col bg-gradient-to-tr text-secondary  from-black via-gray-600 to-gray-500 space-y-6 bg-white shadow-xl p-10 rounded-xl  ">
+        <span className="text-lg font-medium text-secondary">
+          Category-List :
+        </span>
+        <div className="flex  gap-y-6  flex-row flex-wrap gap-x-6">
           {categories?.data?.map((category) => (
             <div
               className="hover:shadow-2xl text-center  rounded-lg bg-gray-600 hover:bg-gray-800 w-fit text-white/80 px-10 py-2 hover:cursor-pointer hover:text-white  my-0 "

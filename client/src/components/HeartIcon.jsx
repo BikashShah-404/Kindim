@@ -35,7 +35,9 @@ const HeartIcon = ({ product }) => {
     dispatch(setFavourites(favouritesFromLocalStorage));
   }, [dispatch]);
 
-  const toogleFavourite = () => {
+  const toogleFavourite = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (isFavourite) {
       dispatch(removeFromFavourites(product));
       removeFavouriteFromLocalStorage(product._id);
@@ -52,10 +54,10 @@ const HeartIcon = ({ product }) => {
       <Tooltip>
         <TooltipTrigger>
           <MdFavorite
-            size={30}
-            color={isFavourite ? "red" : "white"}
+            size={25}
+            color={isFavourite ? "red" : "gray"}
             className=" cursor-pointer"
-            onClick={toogleFavourite}
+            onClick={(e) => toogleFavourite(e)}
           />
         </TooltipTrigger>
         <TooltipContent>
