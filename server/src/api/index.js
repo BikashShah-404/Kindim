@@ -5,6 +5,12 @@ import serverless from "serverless-http";
 import app from "../app.js";
 import connectDB from "../db/index.js";
 
-await connectDB(); // ← connect once at module level
+let isConnected = false;
 
-export default serverless(app);
+export default async function handler(req, res) {
+  if (!isConnected) {
+    await connectDB();
+    isConnected = true;
+  }
+  app(req, res);
+}
