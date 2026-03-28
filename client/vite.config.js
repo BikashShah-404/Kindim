@@ -25,7 +25,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": "https://kindim-server.vercel.app/",
+      "/api": "http://localhost:5000",
     },
   },
 });

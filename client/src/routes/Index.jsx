@@ -33,7 +33,16 @@ import AllOrders from "@/pages/admin/AllOrders.jsx";
 import UserRoute from "./UserRoute.jsx";
 
 const routes = createRoutesFromElements(
-  <Route path="/" element={<App />}>
+  <Route
+    path="/"
+    element={<App />}
+    errorElement={
+      <div style={{ padding: 20 }}>
+        <h1>Error occurred</h1>
+        <p>Check console for details</p>
+      </div>
+    }
+  >
     <Route path="/login" element={<Login />} />
     <Route path="/sign-up" element={<SignUp />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
