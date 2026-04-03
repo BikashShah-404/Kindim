@@ -26,16 +26,34 @@ const Shop = () => {
     (state) => state.shop,
   );
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
   const categoriesQuery = useGetAllCategoriesQuery();
+  console.log(categoriesQuery);
+
   const brandsQuery = useGetAllBrandsQuery();
   const [priceFilter, setPriceFilter] = useState(0);
   const [debouncedPrice, setDebouncedPrice] = useState(0);
   const [priceFilterType, setPriceFilterType] = useState("min");
 
-  const keyword = location.state?.query || "";
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [keyword, setKeyword] = useState(null);
+
+  useEffect(() => {
+    const query = location.state?.query;
+    if (query) {
+      setKeyword(query);
+      setPage(1);
+      // ← clear location state so it doesn't persist on reload
+      window.history.replaceState({}, document.title);
+    } else {
+      setKeyword(null);
+      dispatch(setChecked([]));
+      dispatch(setSelectedBrands([]));
+      dispatch(setRadio([]));
+      setPriceFilter(0);
+    }
+  }, [location.state, dispatch]);
+
   console.log(keyword);
 
   const filteredProductQuery = useGetFilterProductsQuery({
@@ -64,41 +82,49 @@ const Shop = () => {
   ]);
 
   useEffect(() => {
-    if (keyword) {
-      console.log("abc");
+    if (filteredProductQuery.isFetching) return;
+    if (!filteredProductQuery.isSuccess) return;
 
-      console.log(products?.map((eachProduct) => eachProduct.category));
+    if (keyword && selectedBrands.length === 0) {
+      if (!products || products.length === 0) {
+        setCategories([]);
+        setBrands([]);
+        setRadio([]);
+      }
 
       dispatch(
         setCategories(
           Array.from(
-            new Set(products?.map((eachProduct) => eachProduct.category)),
-          )?.map((eachUniqueCategory, index) => ({
-            _id: index,
-            name: eachUniqueCategory,
-          })),
-        ),
-      );
-      dispatch(
-        setBrands(
-          Array.from(
-            new Set(products?.map((eachProduct) => eachProduct.brand)),
+            new Map(
+              products.map(({ categoryId, category }) => [
+                categoryId,
+                { _id: categoryId, name: category },
+              ]),
+            ).values(),
           ),
         ),
       );
-    } else if (!categoriesQuery.isLoading && !brandsQuery.isLoading) {
+      dispatch(setBrands(Array.from(new Set(products.map((p) => p.brand)))));
+    } else if (
+      !categoriesQuery.isLoading &&
+      !brandsQuery.isLoading &&
+      selectedBrands.length === 0
+    ) {
       dispatch(setCategories(categoriesQuery?.data?.data));
       dispatch(setBrands(brandsQuery?.data?.data));
     }
   }, [
-    categoriesQuery,
-    categoriesQuery.data,
-    dispatch,
-    keyword,
-    brandsQuery,
-    brandsQuery.data,
+    filteredProductQuery.isFetching,
+    filteredProductQuery.isSuccess,
     products,
+    keyword,
+    selectedBrands.length,
+    categoriesQuery.data,
+    brandsQuery.data,
+    dispatch,
   ]);
+
+  console.log(categories);
 
   const handleBrandClick = async (value, brand) => {
     console.log(brand);
@@ -107,6 +133,8 @@ const Shop = () => {
       ? [...selectedBrands, brand]
       : selectedBrands.filter((b) => b !== brand);
 
+    setPage(1);
+    console.log(updatedSelectedBrands);
     dispatch(setSelectedBrands(updatedSelectedBrands));
     // await filteredProductQuery.refetch();
   };
@@ -117,6 +145,8 @@ const Shop = () => {
     const updatedChecked = value
       ? [...checked, id]
       : checked.filter((c) => c !== id);
+
+    setPage(1);
     dispatch(setChecked(updatedChecked));
   };
 
@@ -143,6 +173,17 @@ const Shop = () => {
     setPriceFilter(e.target.value);
   };
 
+  const handleReset = () => {
+    // // window.history.replaceState({}, document.title);
+    // dispatch(setChecked([]));
+    // dispatch(setSelectedBrands([]));
+    // dispatch(setRadio([]));
+    // setPriceFilter("min");
+    // setPriceFilter(0);
+    // filteredProductQuery.refetch();
+    window.location.reload();
+  };
+
   return (
     <>
       <div className=" bg-gradient-to-tr from-black via-gray-600 to-gray-500 ">
@@ -160,7 +201,8 @@ const Shop = () => {
                     <input
                       type="checkbox"
                       id={`checkbox-${c._id}`}
-                      defaultChecked={keyword ? true : false}
+                      checked={checked.includes(c._id)}
+                      disabled={keyword ? true : false}
                       onChange={(e) => handleCheck(e.target.checked, c._id)}
                       className="h-5 w-5 rounded-md  border-gray-400 hover:ring-1 ring-offset-black ring-chart-3 ring-offset-1  focus:ring-accent-foreground cursor-pointer accent-black "
                     />
@@ -200,34 +242,37 @@ const Shop = () => {
               <h2 className="text-xl font-alegreya font-medium px-4 py-1 rounded-xl bg-black mt-6">
                 Filter By Price
               </h2>
-              <div className=" p-3 w-fit flex flex-row-reverse gap-x-2 items-center">
-                <input
-                  type="text"
-                  placeholder="Enter Price"
-                  value={priceFilter}
-                  onChange={handlePriceChange}
-                  className="bg-white px-1 py-2 rounded-md text-black placeholder:text-black border-gray-400 hover:ring-1 ring-offset-black ring-chart-3 ring-offset-1  focus:ring-accent-foreground  accent-black"
-                />
-                <select
-                  name="priceFilterType"
-                  id="priceFilterType"
-                  value={priceFilterType}
-                  onChange={(e) => setPriceFilterType(e.target.value)}
-                  className="bg-white py-2 px-1 rounded-md text-black"
-                >
-                  <option id="priceFilterType" value="min" className="">
-                    Min
-                  </option>
-                  <option id="priceFilterType" value="max">
-                    Max
-                  </option>
-                </select>
-              </div>
-              <div className="w-full flex items-center justify-center ">
+              {products?.length !== 0 && (
+                <div className=" p-3 w-fit flex flex-row-reverse gap-x-2 items-center mt-4">
+                  <input
+                    type="text"
+                    placeholder="Enter Price"
+                    value={priceFilter}
+                    onChange={handlePriceChange}
+                    className="bg-white px-1 py-2 rounded-md text-black placeholder:text-black border-gray-400 hover:ring-1 ring-offset-black ring-chart-3 ring-offset-1  focus:ring-accent-foreground  accent-black"
+                  />
+                  <select
+                    name="priceFilterType"
+                    id="priceFilterType"
+                    value={priceFilterType}
+                    onChange={(e) => setPriceFilterType(e.target.value)}
+                    className="bg-white py-2 px-1 rounded-md text-black"
+                  >
+                    <option id="priceFilterType" value="min" className="">
+                      Min
+                    </option>
+                    <option id="priceFilterType" value="max">
+                      Max
+                    </option>
+                  </select>
+                </div>
+              )}
+
+              <div className="w-full flex items-center justify-center  ">
                 <button
                   className={`bg-white px-10 py-1.5 text-black rounded-md my-10 
                 cursor-pointer `}
-                  onClick={() => window.location.reload()}
+                  onClick={handleReset}
                 >
                   Reset
                 </button>{" "}
@@ -262,7 +307,7 @@ const Shop = () => {
                   ))
                 )}
               </div>
-              <div className="mt-20">
+              <div className="mt-20 ">
                 <PaginationComp
                   page={page}
                   limit={limit}

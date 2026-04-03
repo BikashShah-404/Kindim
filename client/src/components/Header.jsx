@@ -28,7 +28,11 @@ import {
 } from "./ui/tooltip";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { resetCart } from "@/redux/features/cart/cartSlice";
-import { setRadio } from "@/redux/features/shop/shopSlice.js";
+import {
+  setCategories,
+  setRadio,
+  setSelectedBrands,
+} from "@/redux/features/shop/shopSlice.js";
 
 const Header = () => {
   const location = useLocation();
@@ -60,7 +64,18 @@ const Header = () => {
 
   const handleSearchProduct = () => {
     dispatch(setRadio([]));
-    navigate(`/shop`, { state: { query: searchTermRef.current.value } });
+    navigate(`/shop`, {
+      state: {
+        query: searchTermRef.current.value,
+      },
+    });
+  };
+
+  const handleShopClick = () => {
+    searchTermRef.current.value = "";
+    navigate(`/shop`, {
+      state: null,
+    });
   };
 
   return (
@@ -145,11 +160,11 @@ const Header = () => {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <Link
-                  className="cursor-pointer hover:bg-white/20 py-1 rounded-xl  w-full text-center"
-                  to={"/shop"}
-                >
-                  <div className="flex space-x-2 items-center justify-center">
+                <div className="cursor-pointer hover:bg-white/20 py-1 rounded-xl  w-full text-center">
+                  <div
+                    className="flex space-x-2 items-center justify-center"
+                    onClick={handleShopClick}
+                  >
                     <ToolTipComp
                       Icon={<FaShop size={20} c />}
                       Text="Shop"
@@ -157,7 +172,7 @@ const Header = () => {
                     />
                     <span className="text-white">Shop</span>
                   </div>
-                </Link>
+                </div>
                 <Link
                   className=" cursor-pointer hover:bg-white/20 py-1.5 rounded-xl  w-full text-center"
                   to={"/favourites"}
@@ -264,13 +279,13 @@ const Header = () => {
           )}
         </AnimatePresence>
         <div className="hidden lg:flex min-w-[10rem] items-center justify-center  space-x-3 pr-3 ">
-          <Link className=" cursor-pointer  " to={"/shop"}>
+          <div className=" cursor-pointer  " onClick={handleShopClick}>
             <ToolTipComp
               Icon={<FaShop size={20} />}
               Text="Shop"
               className={"cursor-pointer"}
             />
-          </Link>
+          </div>
           <Link className=" cursor-pointer" to={"/favourites"}>
             <ToolTipComp
               Icon={

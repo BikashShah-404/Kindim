@@ -41,7 +41,7 @@ const ScrollCarousel = ({ topProducts: data }) => {
         <div className="flex h-full mt-10 items-center  overflow-hidden">
           <motion.div className="flex gap-x-8 gap-y-4" style={{ x }}>
             {data.map((eachTopProduct) => (
-              <AnimatePresence>
+              <AnimatePresence key={eachTopProduct._id}>
                 <motion.div
                   initial={{ scale: 0.8, x: 50, opacity: 0.5 }}
                   whileHover={{
@@ -50,7 +50,6 @@ const ScrollCarousel = ({ topProducts: data }) => {
                   whileInView={{ scale: 1, x: 0, opacity: 1 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="relative"
-                  key={eachTopProduct._id}
                 >
                   <Link
                     to={`/product/${eachTopProduct._id}`}
