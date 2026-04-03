@@ -4,6 +4,7 @@ import { Product } from "../models/product.modal.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { deleteAsset, uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Order } from "../models/order.model.js";
+import { pipeline } from "stream";
 
 const addProduct = asyncHandler(async (req, res) => {
   const { name, brand, quantity, category, description, price, countInStock } =
@@ -308,8 +309,25 @@ const filterProducts = asyncHandler(async (req, res) => {
 
   if (keyword) {
     const { matchedCategory, query } = makeQueryFromKeyword(keyword);
+
+    if ((!matchedCategory || matchedCategory.length === 0) && !query) {
+      return res.status(200).json({
+        status: 200,
+        data: {
+          data: [],
+          currentPage: +page,
+          limit: +limit,
+          totalDocs: 0,
+          totalPages: 1,
+          nextPage: null,
+        },
+        msg: "Filtered Products Fetched Successfully...",
+      });
+    }
     args.category = matchedCategory;
     args.price = query;
+    if (brands.length > 0) args.brands = [...brands];
+
     console.log(radio.length);
 
     if (radio.length > 0) {
@@ -347,10 +365,21 @@ const filterProducts = asyncHandler(async (req, res) => {
           localField: "category",
           foreignField: "_id",
           as: "category",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                name: 1,
+              },
+            },
+          ],
         },
       },
       {
         $addFields: {
+          categoryId: {
+            $first: "$category._id",
+          },
           category: { $first: "$category.name" },
         },
       },
