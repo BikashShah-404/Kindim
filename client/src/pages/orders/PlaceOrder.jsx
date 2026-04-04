@@ -62,7 +62,7 @@ const PlaceOrder = () => {
   };
 
   return (
-    <div className="flex flex-col p-4 md:p-10 min-h-screen space-y-10 bg-gradient-to-br from-black via-gray-700 to-gray-600 text-secondary ">
+    <div className="flex flex-col p-2 md:p-10 min-h-screen space-y-10 bg-gradient-to-br from-black via-gray-700 to-gray-600 text-secondary ">
       {cartItems.length === 0 ? (
         <div className="flex flex-col space-y-10 flex-1 items-center justify-center text-3xl font-semibold">
           <p>The Cart is Empty...</p>
@@ -71,7 +71,9 @@ const PlaceOrder = () => {
         <>
           <div className=" text-2xl font-semibold">Order Summary</div>
           <div className="flex flex-col gap-y-4">
-            <div className="text-secondary">Products Summary</div>
+            <div className="text-secondary font-semibold text-lg ml-2 ">
+              Products Summary
+            </div>
             <div className="flex flex-col md:flex-row flex-wrap gap-x-8 gap-y-8 ">
               {cartItems.map((cartItem) => (
                 <div
@@ -169,14 +171,14 @@ const PlaceOrder = () => {
             </div>
           </div>
 
-          <div className="w-full flex justify-center mt-10">
+          <div className="w-full flex justify-center my-3 mb-20">
             <button
-              className={`bg-gradient-to-r from-black via-gray-700 to-gray-600 px-36 py-2 text-white rounded-md cursor-pointer flex  items-center space-x-2 w-fit hover:bg-gradient-to-l  `}
+              className={`bg-gradient-to-r from-black via-gray-700 to-gray-600 px-8 md:px-36 py-2 text-white rounded-md cursor-pointer flex items-center space-x-2  hover:bg-gradient-to-l  `}
               type="button"
               onClick={placeOrderHandler}
               disabled={cartItems.length === 0 || isLoading}
             >
-              <span>
+              <span className="">
                 Pay with {new String(cart.paymentMethod).toUpperCase()}
               </span>
               <FaPaperPlane />

@@ -149,7 +149,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-black via-gray-900 to-gray-500 text-[#e8e4dc] relative overflow-hidden px-12 pt-16 pb-8 flex flex-col justify-center ">
+    <footer className="bg-gradient-to-br from-black via-gray-900 to-gray-500 text-[#e8e4dc] relative overflow-hidden px-8 sm:px-12 pt-16 pb-8 flex flex-col justify-center ">
       {/* ghost watermark */}
       <span className="absolute -top-[1.6vw] -right-5  text-[16vw] sm:text-[15vw] md:text-[12vw] lg:text-[10vw] font-semibold text-white/[0.125] pointer-events-none leading-none font-berkshireswash italic  select-none tracking-[20px]">
         KINDIM
@@ -260,7 +260,7 @@ const Footer = () => {
               key={s.name}
               href={s.href}
               title={s.name}
-              className="group w-9 h-9   flex items-center justify-center hover:border-white/40 hover:bg-white/5 transition-all bg-gradient-to-r from-black via-gray-800 to-gray-400 rounded-sm bg-"
+              className="group w-9 h-9   flex items-center justify-center hover:border-white/40 hover:bg-white/5 transition-all bg-gradient-to-tr from-black via-gray-800 to-gray-400 rounded-sm bg-"
             >
               {s.icon}
             </a>

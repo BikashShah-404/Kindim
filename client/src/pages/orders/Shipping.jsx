@@ -63,9 +63,9 @@ const Shipping = () => {
   };
 
   return (
-    <div className=" h-screen  flex items-center justify-center">
-      <div className="flex flex-col  items-center justify-around  md:justify-around w-[90%] md:w-[95%] h-fit md:h-[80%]  max-w-6xl p-2 rounded-2xl shadow-2xl bg-accent overflow-y-scroll overflow-x-hidden sm:overflow-y-auto bg-gradient-to-br from-black via-gray-700 to-gray-600 text-secondary">
-        <div className=" flex flex-col items-center justify-center w-full  p-4   ">
+    <div className=" min-h-screen  flex items-center  justify-center">
+      <div className="flex flex-col  items-center justify-around  md:justify-around w-[95%] md:w-[95%] h-fit md:h-[80%]  max-w-6xl p-2 rounded-2xl shadow-2xl bg-accent overflow-x-hidden  bg-gradient-to-br from-black via-gray-700 to-gray-600 text-secondary">
+        <div className=" flex flex-col items-center justify-center w-full  p-4  overflow-y-scroll sm:overflow-y-auto   ">
           <h1 className="text-2xl font-semibold mt-4 md:mt-0">
             Enter the Shipping Details
           </h1>

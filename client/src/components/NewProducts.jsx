@@ -116,24 +116,26 @@ const NewProducts = () => {
   const stripProducts = products.slice(5, 8);
 
   return (
-    <section className="bg-gradient-to-br w-[100%] from-black via-gray-700 to-gray-950 text-secondary  px-10 sm:px-16 py-20 relative  font-alegreya">
-      <div className="flex items-center sm:items-end justify-between mb-16">
-        <div>
+    <section className="bg-gradient-to-br w-[100%] from-black via-gray-700 to-gray-950 text-secondary  px-4 sm:px-10 lg:px-16 py-20 relative  font-alegreya">
+      <div className="flex items-center sm:items-end justify-between mb-16 ">
+        <div className="w-full">
           <p className="text-sm tracking-[3px] uppercase text-amber-600 mb-3.5">
             Just dropped
           </p>
-          <h2 className=" text-5xl  leading-[1.05]">
-            New <span className="italic text-amber-600/80">&</span>
-            <br />
-            Notable
-          </h2>
+          <div className="w-full flex items-center justify-between ">
+            <h2 className=" text-4xl sm:text-5xl  leading-[1.05]">
+              New <span className="italic text-amber-600/80">&</span>
+              <br />
+              Notable
+            </h2>
+            <Link
+              to="/shop"
+              className="text-xs sm:text-sm  uppercase underline underline-offset-4 text-center tracking-widest "
+            >
+              View all arrivals
+            </Link>
+          </div>
         </div>
-        <Link
-          to="/shop"
-          className="text-sm  uppercase underline underline-offset-4 text-center tracking-widest"
-        >
-          View all arrivals
-        </Link>
       </div>
 
       {/* main bento grid */}
@@ -146,7 +148,7 @@ const NewProducts = () => {
 
       {/* bottom strip */}
       {stripProducts.length > 0 && (
-        <div className="grid sm:grid-cols-3 gap-2 mt-2">
+        <div className="grid md:grid-cols-3 gap-2 mt-2">
           {stripProducts.map((product) => (
             <StripCard key={product._id} product={product} />
           ))}

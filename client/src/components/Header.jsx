@@ -79,7 +79,7 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full  h-16 rounded-b-md shadow-2xl pl-8 pr-2 flex items-center sticky  z-10 top-0 bg-white">
+    <header className="w-full  h-16 rounded-b-md shadow-2xl pl-8 pr-2 flex items-center sticky  z-20 top-0 bg-white">
       <Link to="/" className="h-full w-fit">
         <div className="h-full flex items-center justify-center w-fit  ">
           <img src={Logo} alt="logo.png" width={40} />

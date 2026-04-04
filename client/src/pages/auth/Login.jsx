@@ -72,7 +72,7 @@ const Login = () => {
 
   return (
     <div className="z-10 fixed bg-black/30 inset-0   backdrop-blur-[2px] flex items-center justify-center ">
-      <div className="flex items-center w-3/4 md:w-4/5 lg:2/3 h-4/5 max-w-6xl p-2 rounded-2xl shadow-2xl  bg-gradient-to-l text-secondary  from-black via-gray-600 to-gray-500">
+      <div className="flex items-center w-[95%] md:w-4/5 lg:2/3 h-4/5 max-w-6xl p-2 rounded-2xl shadow-2xl  bg-gradient-to-l text-secondary  from-black via-gray-600 to-gray-500">
         <div className=" hidden md:block h-full md:w-1/2 ">
           <img
             src={LoginSideImg}

@@ -13,12 +13,12 @@ const SaleCard = () => {
   console.log(product);
 
   return (
-    <div className="min-h-[82vh] w-[100%] flex flex-col-reverse md:flex-row  items-center bg-gradient-to-br w-[100%] from-black via-gray-700 gap-y-10  to-gray-950 font-alegreya px-16 gap-10 py-16 md:py-0 ">
+    <div className="min-h-[82vh] w-[100%] flex flex-col-reverse md:flex-row  items-center bg-gradient-to-br w-[100%] from-black via-gray-700 gap-y-10  to-gray-950 font-alegreya px-6 md:px-16 gap-10 py-16 md:py-0 ">
       <div className=" flex flex-col gap-y-10 w-full md:w-1/2 justify-center  ">
         <p className="bg-white/90 text-primary font-semibold w-fit px-4 py-2 tracking-widest rounded-b-sm">
           LIMITED TIME
         </p>
-        <div className="text-5xl w-full  md:w-1/2 flex flex-col gap-y-4">
+        <div className="text-4xl sm:text-5xl w-full  md:w-1/2 flex flex-col gap-y-4">
           <p>
             Up to 40<span className="text-amber-600">%</span> off
           </p>
@@ -29,13 +29,15 @@ const SaleCard = () => {
           Don't miss out on our biggest sale of the season. Carefully curated
           pieces at prices that make sense.
         </p>
-        <button
-          className={`bg-gradient-to-tr from-black via-gray-700 to-gray-600 px-14 py-2 text-white rounded-md cursor-pointer flex  items-center space-x-2 w-fit hover:bg-gradient-to-bl font-semibold tracking-wider text-lg `}
-          type="button"
-          onClick={() => navigate("/shop")}
-        >
-          <span>SHOP THE SALE</span>
-        </button>{" "}
+        <div className="w-full  flex justify-center sm:justify-normal">
+          <button
+            className={`bg-gradient-to-tr from-black via-gray-700 to-gray-600 px-4 sm:px-14 py-2 text-white rounded-md cursor-pointer flex  items-center space-x-2 w-fit hover:bg-gradient-to-bl font-semibold tracking-wider  sm:text-lg `}
+            type="button"
+            onClick={() => navigate("/shop")}
+          >
+            <span>SHOP THE SALE</span>
+          </button>{" "}
+        </div>
       </div>
       <div
         className="w-full sm:w-2/3 md:w-1/2  cursor-pointer flex justify-center items-center "

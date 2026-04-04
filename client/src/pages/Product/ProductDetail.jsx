@@ -75,9 +75,9 @@ const ProductDetail = () => {
     <></>
   ) : (
     <div
-      className={`m-3 sm:p-6 rounded-lg bg-gradient-to-l from-black via-gray-700 to-gray-600 relative`}
+      className={`p-2 sm:p-6 rounded-lg bg-gradient-to-l from-black via-gray-700 to-gray-600 relative`}
     >
-      <div className="absolute top-2 right-2">
+      <div className="absolute top-6 right-2">
         <HeartIcon product={product} />
       </div>
       <div className="flex flex-col md:flex-row items-center">
@@ -88,37 +88,37 @@ const ProductDetail = () => {
             className="w-full  xl:w-[38rem] lg:w-[32rem] md:w-[18rem] h-full "
           />
         </div>
-        <div className="flex flex-col flex-1 text-white p-3 ml-3 space-y-2">
+        <div className="flex flex-col flex-1 text-white p-3 sm:ml-3 space-y-2">
           <div className="flex flex-col space-y-1 mt-3">
             <p className="text-2xl font-medium">{product.name}</p>
             <div className="">
               <div className="text-sm">{product.description}</div>{" "}
             </div>
           </div>
-          <p className="text-4xl text-green-600 font-semibold mt-8">
+          <p className="text-3xl text-green-600 font-semibold mt-8">
             ${product.price}.00
           </p>
 
           <div className="flex flex-col flex-1 justify-end space-y-4 mt-8 ">
             <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0  sm:justify-evenly">
-              <div className="flex space-x-1 items-center text-lg">
+              <div className="flex space-x-1 items-center text-sm sm:text-lg">
                 <FaShop color="" />
                 <span>Brand : </span>
                 <p>{product.brand}</p>
               </div>
-              <div className="flex space-x-1 items-center text-lg">
+              <div className="flex space-x-1 items-center text-sm sm:text-lg">
                 <BsBoxSeamFill color="" />
                 <span>Sold : </span>
                 <p>{product.quantity} units</p>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0  sm:justify-evenly">
-              <div className="flex space-x-1 items-center text-lg b">
+              <div className="flex space-x-1 items-center text-sm sm:text-lg">
                 <IoMdClock color="white" />
                 <span>Added :</span>
                 <p>{moment(product.createdAt).fromNow()}</p>
               </div>
-              <div className="flex space-x-1 items-center text-lg">
+              <div className="flex space-x-1 items-center text-sm sm:text-lg">
                 <GrBundle color="" />
                 <span>In Stock : </span>
                 <p>{product.countInStock}</p>
@@ -156,7 +156,7 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center items-center text-xl">
+          <div className="flex justify-center items-center text-xl mt-6">
             <button
               className={`bg-gradient-to-r from-black via-gray-700 to-gray-600 px-14 py-2 text-white rounded-md cursor-pointer flex  items-center space-x-2 `}
               type="button"
@@ -177,9 +177,9 @@ const ProductDetail = () => {
             <>...</>
           ) : (
             <div className="flex flex-col mt-12 space-y-12 w-full">
-              <div className="flex w-full">
+              <div className="flex w-full ">
                 <div className="flex flex-col space-y-10 sm:space-y-0 sm:flex-row w-full justify-center items-center  sm:space-x-[15vw] ">
-                  <div className="flex flex-col space-y-1 ">
+                  <div className="flex flex-col items-center sm:items-start space-y-1 ">
                     <div className="flex items-center space-x-2 ">
                       <span className="font-bold text-2xl">
                         {product.rating}
@@ -193,22 +193,22 @@ const ProductDetail = () => {
                   {isReviewNoLoading ? (
                     <>Loading</>
                   ) : (
-                    <>
+                    <div className="">
                       <RatingsPerReview
                         data={reviewsPerRating?.data}
                         totalReviews={product?.numReviews}
                       />
-                    </>
+                    </div>
                   )}
                 </div>
               </div>
-              <div className="w-full mt-20">
-                <div className="w-full flex items-center justify-around">
-                  <div className="text-2xl font-semibold ">
+              <div className="w-full mt-20 flex flex-col gap-y-12">
+                <div className="w-full flex flex-col px-2 gap-y-5 items-center sm:flex-row   sm:justify-around">
+                  <div className="text-2xl font-semibold self-start ">
                     Recent Reviews:{" "}
                   </div>
                   <button
-                    className="bg-gradient-to-tr from-black via-gray-700 to-gray-600 text-white px-14 py-2 text-black rounded-md cursor-pointer font-bold"
+                    className="bg-gradient-to-tr from-black via-gray-700 to-gray-600 text-white px-6 sm:px-14 py-2 text-black rounded-md cursor-pointer font-bold self-end text-xs"
                     onClick={handleisReviewProductClicked}
                   >
                     {reviewOfUser?.status === 200
@@ -216,7 +216,7 @@ const ProductDetail = () => {
                       : "Review Product"}
                   </button>
                 </div>
-                <div className=" w-full flex flex-col items-center mt-8 py-10 space-y-12">
+                <div className=" w-full flex flex-col items-center  py-10 space-y-12">
                   {reviewData &&
                     reviewData?.data?.reviews?.map((eachReview) => (
                       <div

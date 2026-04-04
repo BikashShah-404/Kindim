@@ -53,7 +53,7 @@ const RatingsPerReview = ({ data: reviewsPerRating, totalReviews }) => {
             <span>{eachRating.rating}</span>
             <IoStar className="font-bold" size={12} />
           </p>
-          <div className="w-60 h-1.5 bg-white rounded-md">
+          <div className="w-40 sm:w-60 h-1.5 bg-white rounded-md">
             <div
               className={`h-full rounded-lg`}
               style={{

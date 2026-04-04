@@ -17,21 +17,28 @@ const ScrollCarousel = ({ topProducts: data }) => {
     target: targetRef,
   });
 
-  const rawX = useTransform(scrollYProgress, [0, 1], ["1.5%", "-80%"]);
+  const endX =
+    window.innerWidth < 768
+      ? "-95%" // mobile
+      : window.innerWidth < 1024
+        ? "-90%" // tablet
+        : "-85%"; // desktop
+
+  const rawX = useTransform(scrollYProgress, [0, 1], ["1.5%", endX]);
   const x = useSpring(rawX, { stiffness: 100, damping: 50 });
 
   return (
-    <div className="relative h-[500vh] will-change-transform" ref={targetRef}>
+    <div className="relative h-[600vh]  will-change-transform" ref={targetRef}>
       <div
         className="sticky top-0 h-[100vh] overflow-hidden bg-gradient-to-br from-black via-gray-700 to-gray-950 
  "
       >
-        <div className="absolute top-[10vh]  w-full flex justify-between items-end left-8  font-semibold text-3xl text-white font-alegreya">
+        <div className="absolute top-[10vh]  w-full flex justify-between  items-center md:items-end left-8  font-semibold text-3xl text-white font-alegreya">
           <span>
             <span className="text-amber-600">Top </span> Rated Products
           </span>
           <Link
-            className="text-lg mr-20  underline underline-offset-4 text-center"
+            className="text-lg mr-14 sm:mr-16 md:mr-20  underline underline-offset-4 text-center"
             to={"/shop"}
           >
             VIEW ALL
@@ -39,7 +46,7 @@ const ScrollCarousel = ({ topProducts: data }) => {
         </div>
 
         <div className="flex h-full mt-10 items-center  overflow-hidden">
-          <motion.div className="flex gap-x-8 gap-y-4" style={{ x }}>
+          <motion.div className="flex gap-x-6 sm:gap-x-8 gap-y-4" style={{ x }}>
             {data.map((eachTopProduct) => (
               <AnimatePresence key={eachTopProduct._id}>
                 <motion.div

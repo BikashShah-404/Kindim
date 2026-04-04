@@ -1,10 +1,13 @@
 import Home from "../assets/Home.png";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomeImage = () => {
   const targetRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
+
+  const navigate = useNavigate();
 
   const discoverOpacity = useTransform(
     scrollYProgress,
@@ -34,7 +37,7 @@ const HomeImage = () => {
         <img src={Home} alt="" className="w-full h-full object-cover" />
       </div>
       <div className="sticky top-0 flex h-screen items-center justify-end px-8  ">
-        <div className="w-full h-full  relative text-black flex justify-center items-center text-[20vw] italic font-berkshireswash  ">
+        <div className="w-full h-full  relative text-black flex justify-center items-center text-7xl md:text-[20vw] italic font-berkshireswash  ">
           <motion.div
             style={{ opacity: discoverOpacity }}
             className="absolute "
@@ -55,10 +58,16 @@ const HomeImage = () => {
             className="absolute bottom-90"
           >
             <div className="flex flex-col gap-y-10 sm:flex-row sm:gap-y-0 gap-x-20">
-              <button className="bg-gradient-to-r from-black via-gray-700 to-gray-600  px-20 py-3 text-white rounded-md cursor-pointer  h-fit    space-x-2  hover:bg-gradient-to-l text-xl tracking-widest text-center ">
+              <button
+                className="bg-gradient-to-r from-black via-gray-700 to-gray-600 px-16 md:px-20 py-3 text-white rounded-md cursor-pointer  h-fit   space-x-2  hover:bg-gradient-to-l text-xl tracking-widest text-center justify-center"
+                onClick={() => navigate("/shop")}
+              >
                 SHOP NOW
               </button>
-              <button className="bg-gradient-to-r from-black via-gray-700 to-gray-600  text-white rounded-md cursor-pointer  px-20 py-3  h-fit flex  items-center space-x-2  hover:bg-gradient-to-l text-xl tracking-widest ">
+              <button
+                className="bg-gradient-to-r from-black via-gray-700 to-gray-600  text-white rounded-md cursor-pointer   md:px-20 py-3  h-fit flex  items-center justify-center space-x-2  hover:bg-gradient-to-l text-xl tracking-widest  "
+                onClick={() => navigate("/shop")}
+              >
                 Explore Categories
               </button>
             </div>

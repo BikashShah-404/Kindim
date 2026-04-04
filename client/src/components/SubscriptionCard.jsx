@@ -83,7 +83,7 @@ const SubscriptionCard = () => {
             </button>
           </div>
         </div>
-        <p className="font-semibold font-alegreya text-xl tracking-wide">
+        <p className="font-semibold font-alegreya text-lg sm:text-xl tracking-wide">
           {userInfo?.isSubscribed && (
             <span>Thank u for staying Connected with us.</span>
           )}

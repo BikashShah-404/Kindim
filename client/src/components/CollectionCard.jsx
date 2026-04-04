@@ -65,16 +65,16 @@ const CollectionCard = () => {
   console.log(categories);
 
   return (
-    <div className="bg-[#0e0d0b] w-[100%]  text-secondary   px-8 py-20 font-alegreya pb-30 ">
+    <div className="bg-[#0e0d0b] w-[100%]  text-secondary px-4  sm:px-8 py-20 font-alegreya pb-30 ">
       <div className="font-alegreya text-sm ">BROWSE BY CATEGORY</div>
-      <div className="w-full  flex justify-between  sm:items-end mt-4 mb-20 text-5xl">
+      <div className="w-full  flex justify-between items-center  sm:items-end mt-4 mb-20 text-4xl sm:text-5xl">
         <h2 className=" font-light text-secondary leading-[1.05]">
           Shop <span className="italic text-amber-600">the</span>
           <br />
           Collection
         </h2>
         <Link
-          className="text-sm  underline underline-offset-4 text-center tracking-widest"
+          className="text-xs sm:text-sm  underline underline-offset-4 text-center tracking-widest"
           to={"/shop"}
         >
           VIEW ALL CATEGORIES

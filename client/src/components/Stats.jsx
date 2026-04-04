@@ -16,7 +16,7 @@ const Stats = () => {
   const topReviews = data?.data;
 
   return (
-    <div className="w-[100%] bg-[#0e0d0b] min-h-screen flex flex-col justify-between py-20 font-alegreya p-10 gap-y-20">
+    <div className="w-[100%] bg-[#0e0d0b] min-h-screen flex flex-col justify-between py-20 font-alegreya p-4 sm:p-10 gap-y-20">
       <div className="flex flex-col gap-y-6 ">
         <span className="tracking-[1.4px] text-sm">WHAT PEOPLE SAY</span>
         <h2 className=" font-light text-secondary leading-[1.05] text-5xl">

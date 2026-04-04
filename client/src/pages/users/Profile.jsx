@@ -243,7 +243,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="w-full h-[calc(100vh-64px)] flex flex-col p-10 items-center overflow-y-auto bg-gradient-to-br from-black via-gray-700 to-gray-800 text-secondary ">
+    <div className="w-full min-h-[calc(100vh-64px)] flex flex-col p-2 items-center overflow-y-auto bg-gradient-to-br from-black via-gray-700 to-gray-800 text-secondary ">
       <div className="w-60 min-h-60 rounded-3xl overflow-hidden mt-10 relative flex justify-center items-center ">
         {preview || userInfo?.profilePic ? (
           <img
@@ -356,7 +356,7 @@ const Profile = () => {
               />
             </div>
           </div>
-          <div className="w-full sm:w-full  flex flex-col sm:flex-row  justify-around mt-10 gap-y-10 sm:gap-y-0">
+          <div className="w-[80%] sm:w-full  flex flex-col sm:flex-row  justify-around mt-10 gap-y-10 sm:gap-y-0">
             <button
               className={`bg-black px-14 py-2 text-white rounded-md cursor-pointer ${
                 isSubmitting ? "cursor-wait" : "cursor-pointer"
@@ -464,8 +464,8 @@ const Profile = () => {
         )}
       </div>
 
-      <div className="flex  flex-1 items-end gap-x-2 font-alegreya text-lg font-semibold w-full justify-center">
-        <div className="flex flex-col md:flex-row gap-x-2 items-center justify-center w-full">
+      <div className="flex  flex-1 items-end gap-x-2 font-alegreya text-lg font-semibold w-full justify-center py-10">
+        <div className="flex flex-col gap-y-2 md:flex-row gap-x-2 items-center justify-center w-full">
           <span>How was your Kindim experience?</span>
           {appReviewOfUser?.data ? (
             <button

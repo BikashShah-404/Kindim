@@ -45,7 +45,10 @@ const Cart = () => {
   return (
     <div className="flex flex-col w-full min-h-screen  ">
       {cartItems.length === 0 ? (
-        <div className="flex flex-col space-y-10 flex-1 items-center justify-center text-3xl font-semibold  bg-gradient-to-tr from-black via-gray-600 to-gray-500">
+        <div className="flex flex-col space-y-10 flex-1 items-center relative  justify-center text-3xl font-semibold  bg-gradient-to-tr from-black via-gray-600 to-gray-500">
+          <div className="text-2xl font-semibold mt-2 absolute top-8 left-2  ml-4 text-white">
+            Shopping Cart
+          </div>
           <p>Looks Lonely Here...</p>
           <Link to={"/shop"}>
             <button className="bg-gradient-to-br from-black via-gray-700 to-gray-600  px-6 py-2 rounded-lg text-white text-xl hover:bg-gradient-to-tl cursor-pointer">
@@ -54,7 +57,7 @@ const Cart = () => {
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col p-4 md:p-10 space-y-10 bg-gradient-to-br from-black via-gray-700 to-gray-600">
+        <div className="flex flex-col p-2 md:p-10 space-y-10 bg-gradient-to-br from-black via-gray-700 to-gray-600">
           <div className="text-2xl font-semibold mt-2  ml-4 text-white">
             Shopping Cart
           </div>
@@ -85,7 +88,7 @@ const Cart = () => {
                         ${cartItem.price}
                       </div>
                     </div>
-                    <div className="flex space-x-4  items-center md:items-start">
+                    <div className="flex flex-col justify-between sm:justify-normal  sm:flex-row space-x-4  items-center md:items-start">
                       <select
                         id="qty"
                         className="px-6 bg-white/20 py-1.5 rounded-lg h-fit"
@@ -104,7 +107,7 @@ const Cart = () => {
                           </option>
                         ))}
                       </select>
-                      <div className="">
+                      <div className=" self-end">
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>

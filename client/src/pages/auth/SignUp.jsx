@@ -141,8 +141,8 @@ const SignUp = () => {
 
   return (
     <div className="fixed  inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center z-10">
-      <div className="flex flex-col md:flex-row items-center justify-around  md:justify-around w-[90%] md:w-[95%] h-[90vh] md:h-[80vh]  max-w-6xl p-2  rounded-2xl shadow-2xl bg-accent overflow-y-scroll overflow-x-hidden sm:overflow-y-auto bg-gradient-to-br text-secondary from-black via-gray-600 to-gray-500 ">
-        <div className="md:w-1/5 mt-6 md:mt-0 flex md:flex-col items-center justify-around relative  w-[20rem]  md:h-[20rem] ">
+      <div className="flex flex-col md:flex-row items-center justify-around  md:justify-around w-[95%] md:w-[95%] h-[90vh] md:h-[80vh]  max-w-6xl p-2  rounded-2xl shadow-2xl bg-accent overflow-y-scroll overflow-x-hidden sm:overflow-y-auto bg-gradient-to-br text-secondary from-black via-gray-600 to-gray-500 ">
+        <div className="md:w-1/5 mt-20 md:mt-0 flex md:flex-col items-center justify-around relative  w-[20rem]  md:h-[20rem] ">
           {
             <>
               <motion.div
@@ -186,7 +186,7 @@ const SignUp = () => {
           ))}
         </div>
         <div className=" flex flex-col items-center justify-center w-full  p-4   ">
-          <h1 className="text-2xl font-semibold mt-4 md:mt-0">SignUp 🥳</h1>
+          <h1 className="text-2xl font-semibold mt-4 md:mt-0">SignUp </h1>
           <form
             className=" w-full flex flex-col  items-center space-y-2"
             onSubmit={handleSubmit(handleSignUp)}
